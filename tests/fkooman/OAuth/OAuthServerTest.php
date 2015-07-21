@@ -55,7 +55,7 @@ class OAuthServerTest extends PHPUnit_Framework_TestCase
             )
         );
 
-        $io = $this->getMockBuilder('fkooman\OAuth\IO')->getMock();
+        $io = $this->getMockBuilder('fkooman\IO\IO')->getMock();
         $io->method('getTime')->willReturn(1234567890);
 
         $this->oauthServer = new OAuthServer(

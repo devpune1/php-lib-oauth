@@ -7,6 +7,7 @@ use fkooman\Http\Request;
 use fkooman\Http\RedirectResponse;
 use fkooman\Http\JsonResponse;
 use fkooman\Http\Exception\BadRequestException;
+use fkooman\IO\IO;
 
 class OAuthServer
 {
@@ -25,7 +26,7 @@ class OAuthServer
     /** @var AccessTokenInterface */
     private $accessToken;
 
-    /** @var IO */
+    /** @var fkooman\IO\IO */
     private $io;
 
     public function __construct(TemplateInterface $templateManager, ClientInterface $client, ResourceServerInterface $resourceServer, AuthorizationCodeInterface $authorizationCode, AccessTokenInterface $accessToken, IO $io = null)
