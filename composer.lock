@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "35aa969dba8ad118040764a5c1406a40",
+    "hash": "41f57529a95871fb2532a8588cf82e14",
     "packages": [
         {
             "name": "fkooman/io",
-            "version": "dev-master",
+            "version": "1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fkooman/php-lib-io.git",
-                "reference": "c3e580478a352128427f6def08994927c3986627"
+                "reference": "c529a4815a4534c3118bc248e419c2e06f5bed5c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fkooman/php-lib-io/zipball/c3e580478a352128427f6def08994927c3986627",
-                "reference": "c3e580478a352128427f6def08994927c3986627",
+                "url": "https://api.github.com/repos/fkooman/php-lib-io/zipball/c529a4815a4534c3118bc248e419c2e06f5bed5c",
+                "reference": "c529a4815a4534c3118bc248e419c2e06f5bed5c",
                 "shasum": ""
             },
             "require": {
@@ -43,7 +43,7 @@
                 }
             ],
             "description": "Simple IO library",
-            "time": "2015-07-21 15:38:32"
+            "time": "2015-07-21 15:48:18"
         },
         {
             "name": "fkooman/json",
@@ -218,9 +218,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "fkooman/io": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
