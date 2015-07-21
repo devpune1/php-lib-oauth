@@ -10,7 +10,7 @@
             "fkooman\\OAuth\\": "src/"
         }
     },
-    "description": "Simple OAuth 2.0 Server",
+    "description": "OAuth 2.0 Server Library",
     "license": "AGPL-3.0",
     "name": "fkooman/oauth",
     "require": {
