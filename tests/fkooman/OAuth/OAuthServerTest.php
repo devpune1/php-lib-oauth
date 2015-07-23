@@ -174,6 +174,34 @@ class OAuthServerTest extends PHPUnit_Framework_TestCase
         );
     }
 
+    /**
+     * @expectedException fkooman\Http\Exception\BadRequestException
+     * @expectedExceptionMessage authorization code can not be replayed
+     */
+    public function testPostTokenReplay()
+    {
+        $request = new Request(
+            array(
+                'HTTPS' => 'on',
+                'SERVER_NAME' => 'oauth.example',
+                'SERVER_PORT' => '443',
+                'REQUEST_URI' => '/token',
+                'SCRIPT_NAME' => '/index.php',
+                'PATH_INFO' => '/token',
+                'QUERY_STRING' => '',
+                'REQUEST_METHOD' => 'POST',
+            ),
+            array(
+                'code' => 'replayed_code',
+                'scope' => 'post',
+                'redirect_uri' => 'https://localhost/cb',
+                'grant_type' => 'authorization_code',
+                'client_id' => 'https://localhost',
+            )
+        );
+        $this->oauthServer->postToken($request);
+    }
+
     public function testPostIntrospect()
     {
         $request = new Request(

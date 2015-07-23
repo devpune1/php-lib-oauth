@@ -50,6 +50,10 @@ class TestAuthorizationCode implements AuthorizationCodeInterface
 
     public function isFresh($authorizationCode)
     {
+        if ('replayed_code' === $authorizationCode) {
+            return false;
+        }
+
         return true;
     }
 }

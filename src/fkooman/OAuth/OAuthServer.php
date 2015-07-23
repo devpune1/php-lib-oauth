@@ -131,6 +131,9 @@ class OAuthServer
     public function postToken(Request $request)
     {
         $tokenRequest = RequestValidation::validateTokenRequest($request);
+        if (!$this->authorizationCode->isFresh($tokenRequest['code'])) {
+            throw new BadRequestException('authorization code can not be replayed');
+        }
         $authorizationCode = $this->authorizationCode->retrieve($tokenRequest['code']);
 
         $iat = $authorizationCode->getIssuedAt();
