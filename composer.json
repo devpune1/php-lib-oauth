@@ -11,15 +11,15 @@
         }
     },
     "description": "OAuth 2.0 Server Library",
-    "license": "AGPL-3.0",
+    "license": "Apache-2.0",
     "name": "fkooman/oauth",
     "require": {
-        "ext-date": "*",
         "ext-filter": "*",
         "ext-pcre": "*",
         "fkooman/io": "^1.0.0",
         "fkooman/rest": "^1.0.0",
-        "fkooman/rest-plugin-authentication": "^1.0.0"
+        "fkooman/rest-plugin-authentication": "^1.0.0",
+        "php": ">= 5.3.3"
     },
     "require-dev": {
         "fkooman/base64": "^1.0.0"

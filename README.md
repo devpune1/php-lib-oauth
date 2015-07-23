@@ -3,3 +3,18 @@
 
 # Introduction
 Very simple OAuth 2.0 authorization server library.
+
+# API
+
+    <?php
+
+    $oauthServer = new OAuthServer(
+        TemplateInterface $templateManager,
+        ClientInterface $client,
+        ResourceServerInterface $resourceServer,
+        AuthorizationCodeInterface $authorizationCode, 
+        AccessTokenInterface $accessToken
+    );
+
+    $service = new OAuthService($oauthServer);
+
