@@ -42,6 +42,16 @@ class OAuthServer
         $this->io = $io;
     }
 
+    /**
+     * Get the template manager.
+     *
+     * @return TemplateInterface the template manager instance
+     */
+    public function getTemplateManager()
+    {
+        return $this->templateManager;
+    }
+
     public function getAuthorize(Request $request, UserInfoInterface $userInfo)
     {
         $authorizeRequest = RequestValidation::validateAuthorizeRequest($request);

@@ -9,7 +9,7 @@ use fkooman\Rest\Plugin\Authentication\UserInfoInterface;
 class OAuthService extends Service
 {
     /** @var OAuthServer */
-    private $server;
+    protected $server;
 
     public function __construct(OAuthServer $server)
     {
