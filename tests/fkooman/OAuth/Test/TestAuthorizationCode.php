@@ -47,4 +47,9 @@ class TestAuthorizationCode implements AuthorizationCodeInterface
             )
         );
     }
+
+    public function isFresh($authorizationCode)
+    {
+        return true;
+    }
 }
