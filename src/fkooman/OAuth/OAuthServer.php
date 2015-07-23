@@ -85,6 +85,7 @@ class OAuthServer
         $postAuthorizeRequest = RequestValidation::validatePostAuthorizeRequest($request);
 
         if ('yes' === $postAuthorizeRequest['approval']) {
+            // approved
             $code = $this->authorizationCode->store(
                 new AuthorizationCode(
                     $postAuthorizeRequest['client_id'],
@@ -95,16 +96,34 @@ class OAuthServer
                 )
             );
 
+            $separator = false === strpos($postAuthorizeRequest['redirect_uri'], '?') ? '?' : '&';
+
+            $redirectTo = sprintf(
+                '%s%scode=%s&state=%s',
+                $postAuthorizeRequest['redirect_uri'],
+                $separator,
+                $code,
+                $postAuthorizeRequest['state']
+            );
+
             return new RedirectResponse(
-                // FIXME: append, not just simply add
-                $postAuthorizeRequest['redirect_uri'].'?code='.$code.'&state='.$postAuthorizeRequest['state'],
+                $redirectTo,
                 302
             );
         }
 
         // not approved
+        $separator = false === strpos($postAuthorizeRequest['redirect_uri'], '?') ? '?' : '&';
+
+        $redirectTo = sprintf(
+            '%s%serror=access_denied&state=%s',
+            $postAuthorizeRequest['redirect_uri'],
+            $separator,
+            $postAuthorizeRequest['state']
+        );
+
         return new RedirectResponse(
-            $postAuthorizeRequest['redirect_uri'].'?error=XXX&state='.$postAuthorizeRequest['state'],
+            $redirectTo,
             302
         );
     }

@@ -116,6 +116,29 @@ class OAuthServerTest extends PHPUnit_Framework_TestCase
         );
     }
 
+    public function testPostAuthorizeNoApproval()
+    {
+        $query = array(
+            'client_id' => 'https://localhost',
+            'redirect_uri' => 'https://localhost/cb',
+            'state' => '12345',
+            'response_type' => 'code',
+            'scope' => 'post',
+        );
+        $request = $this->getAuthorizeRequest($query, 'POST', array('approval' => 'no'));
+
+        $this->assertSame(
+            array(
+                'HTTP/1.1 302 Found',
+                'Content-Type: text/html;charset=UTF-8',
+                'Location: https://localhost/cb?error=access_denied&state=12345',
+                '',
+                '',
+            ),
+            $this->oauthServer->postAuthorize($request, $this->userInfo)->toArray()
+        );
+    }
+
     public function testPostToken()
     {
         $request = new Request(
