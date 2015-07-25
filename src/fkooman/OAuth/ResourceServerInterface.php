@@ -5,13 +5,12 @@ namespace fkooman\OAuth;
 interface ResourceServerInterface
 {
     /**
-     * Retrieve a client based on clientId, redirectUri and scope.
+     * Retrieve a resource server based on resourceServerId.
      *
-     * @param string      $resourceServerId the resource server ID
-     * @param string|null $scope            the scope
+     * @param string $resourceServerId the resource server ID
      *
-     * @return ResourceServerInfo|false if the resource server exists with given
-     *                                  parameters it returns ResourceServer, otherwise false
+     * @return ResourceServerInfo|false if the resource server exists it
+     *                                  returns ResourceServer, otherwise false
      */
     public function getResourceServer($resourceServerId);
 }
