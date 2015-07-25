@@ -12,13 +12,9 @@ class InputValidation
         #   The "client_id" element is defined in Section 2.3.1:
         #     client-id     = *VSCHAR
 
-        // I do not understand why this is not 1*VSCHAR. So the client_id
+        // XXX: I do not understand why this is not 1*VSCHAR. So the client_id
         // parameter is allowed to be the empty string?
-        if (1 !== preg_match(self::VSCHAR, $clientId)) {
-            return false;
-        }
-
-        return $clientId;
+        return self::requireNonEmptyVsChar($clientId);
     }
 
     public static function responseType($responseType)
@@ -95,42 +91,21 @@ class InputValidation
         #   The "state" element is defined in Sections 4.1.1, 4.1.2, 4.1.2.1,
         #   4.2.1, 4.2.2, and 4.2.2.1:
         #     state      = 1*VSCHAR
-        if (1 > strlen($state)) {
-            return false;
-        }
-        if (1 !== preg_match(self::VSCHAR, $state)) {
-            return false;
-        }
-
-        return $state;
+        return self::requireNonEmptyVsChar($state);
     }
 
     public static function code($code)
     {
         #   The "code" element is defined in Section 4.1.3:
         #     code       = 1*VSCHAR
-        if (1 > strlen($code)) {
-            return false;
-        }
-        if (1 !== preg_match(self::VSCHAR, $code)) {
-            return false;
-        }
-
-        return $code;
+        return self::requireNonEmptyVsChar($code);
     }
 
     public static function token($token)
     {
         #   The "access_token" element is defined in Sections 4.2.2 and 5.1:
         #     access-token = 1*VSCHAR
-        if (1 > strlen($token)) {
-            return false;
-        }
-        if (1 !== preg_match(self::VSCHAR, $token)) {
-            return false;
-        }
-
-        return $token;
+        return self::requireNonEmptyVsChar($token);
     }
 
     public static function approval($approval)
@@ -140,5 +115,17 @@ class InputValidation
         }
 
         return $approval;
+    }
+
+    public static function requireNonEmptyVsChar($str)
+    {
+        if (1 > strlen($str)) {
+            return false;
+        }
+        if (1 !== preg_match(self::VSCHAR, $str)) {
+            return false;
+        }
+
+        return $str;
     }
 }
