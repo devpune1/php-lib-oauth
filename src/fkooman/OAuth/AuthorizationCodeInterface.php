@@ -28,14 +28,15 @@ interface AuthorizationCodeInterface
     public function retrieve($authorizationCode);
 
     /**
-     * Check whether or not the authorizationCode was used before.
+     * Check whether or not the authorization code was used before.
      *
      * @param string $authorizationCode the authorization code received from
      *                                  the client
      *
      * @return bool true if the code was not used before, false if it was used
-     *              before. NOTE that as call to isFresh MUST mark that particular 
-     *              authorization code as used IMMEDIATELY. 
+     *              before. NOTE: a call to isFresh MUST mark that particular 
+     *              authorization code as used IMMEDIATELY. It must NEVER 
+     *              respond with true for the same authorization code.
      */
     public function isFresh($authorizationCode);
 }
