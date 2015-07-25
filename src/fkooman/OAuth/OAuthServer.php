@@ -86,7 +86,7 @@ class OAuthServer
 
         if ('yes' === $postAuthorizeRequest['approval']) {
             // approved
-            $code = $this->authorizationCode->store(
+            $code = $this->authorizationCode->storeAuthorizationCode(
                 new AuthorizationCode(
                     $postAuthorizeRequest['client_id'],
                     $userInfo->getUserId(),
@@ -131,10 +131,10 @@ class OAuthServer
     public function postToken(Request $request)
     {
         $tokenRequest = RequestValidation::validateTokenRequest($request);
-        if (!$this->authorizationCode->isFresh($tokenRequest['code'])) {
+        if (!$this->authorizationCode->isFreshAuthorizationCode($tokenRequest['code'])) {
             throw new BadRequestException('authorization code can not be replayed');
         }
-        $authorizationCode = $this->authorizationCode->retrieve($tokenRequest['code']);
+        $authorizationCode = $this->authorizationCode->retrieveAuthorizationCode($tokenRequest['code']);
 
         $iat = $authorizationCode->getIssuedAt();
         if ($this->io->getTime() > $iat + 600) {
@@ -157,7 +157,7 @@ class OAuthServer
         // FIXME: keep log of used codes (must not allowed to be replayed)
 
         // create an access token
-        $accessToken = $this->accessToken->store(
+        $accessToken = $this->accessToken->storeAccessToken(
             new AccessToken(
                 $authorizationCode->getClientId(),
                 $authorizationCode->getUserId(),
@@ -183,7 +183,7 @@ class OAuthServer
     public function postIntrospect(Request $request, UserInfoInterface $userInfo)
     {
         $introspectRequest = RequestValidation::validateIntrospectRequest($request);
-        $accessToken = $this->accessToken->retrieve($introspectRequest['token']);
+        $accessToken = $this->accessToken->retrieveAccessToken($introspectRequest['token']);
 
         if (false === $accessToken) {
             $body = array(

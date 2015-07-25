@@ -24,7 +24,7 @@ use fkooman\Base64\Base64Url;
 
 class TestAuthorizationCode implements AuthorizationCodeInterface
 {
-    public function store(AuthorizationCode $authorizationCode)
+    public function storeAuthorizationCode(AuthorizationCode $authorizationCode)
     {
         return Base64Url::encode(
             Json::encode(
@@ -39,7 +39,7 @@ class TestAuthorizationCode implements AuthorizationCodeInterface
         );
     }
 
-    public function retrieve($authorizationCode)
+    public function retrieveAuthorizationCode($authorizationCode)
     {
         return AuthorizationCode::fromArray(
             Json::decode(
@@ -48,7 +48,7 @@ class TestAuthorizationCode implements AuthorizationCodeInterface
         );
     }
 
-    public function isFresh($authorizationCode)
+    public function isFreshAuthorizationCode($authorizationCode)
     {
         if ('replayed_code' === $authorizationCode) {
             return false;

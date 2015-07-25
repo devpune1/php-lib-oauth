@@ -12,7 +12,7 @@ interface AccessTokenInterface
      * @return string the access token that will be provided to the
      *                client
      */
-    public function store(AccessToken $accessToken);
+    public function storeAccessToken(AccessToken $accessToken);
 
     /**
      * Retrieve an access token.
@@ -24,5 +24,5 @@ interface AccessTokenInterface
      *                           access token was found, or false if it was
      *                           not found
      */
-    public function retrieve($accessToken);
+    public function retrieveAccessToken($accessToken);
 }

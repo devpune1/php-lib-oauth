@@ -24,7 +24,7 @@ use fkooman\Base64\Base64Url;
 
 class TestAccessToken implements AccessTokenInterface
 {
-    public function store(AccessToken $accessToken)
+    public function storeAccessToken(AccessToken $accessToken)
     {
         return Base64Url::encode(
             Json::encode(
@@ -39,7 +39,7 @@ class TestAccessToken implements AccessTokenInterface
         );
     }
 
-    public function retrieve($accessToken)
+    public function retrieveAccessToken($accessToken)
     {
         return AccessToken::fromArray(
             Json::decode(

@@ -13,7 +13,7 @@ interface AuthorizationCodeInterface
      * @return string the authorization code that will be provided to the
      *                client
      */
-    public function store(AuthorizationCode $authorizationCode);
+    public function storeAuthorizationCode(AuthorizationCode $authorizationCode);
 
     /**
      * Retrieve an authorization code.
@@ -25,7 +25,7 @@ interface AuthorizationCodeInterface
      *                                 authorization code was found, or false 
      *                                 if it was not found
      */
-    public function retrieve($authorizationCode);
+    public function retrieveAuthorizationCode($authorizationCode);
 
     /**
      * Check whether or not the authorization code was used before.
@@ -38,5 +38,5 @@ interface AuthorizationCodeInterface
      *              authorization code as used IMMEDIATELY. It must NEVER 
      *              respond with true for the same authorization code.
      */
-    public function isFresh($authorizationCode);
+    public function isFreshAuthorizationCode($authorizationCode);
 }
