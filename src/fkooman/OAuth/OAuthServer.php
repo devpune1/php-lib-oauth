@@ -26,7 +26,7 @@ class OAuthServer
     /** @var AccessTokenInterface */
     private $accessToken;
 
-    /** @var fkooman\IO\IO */
+    /** @var \fkooman\IO\IO */
     private $io;
 
     public function __construct(TemplateInterface $templateManager, ClientInterface $client, ResourceServerInterface $resourceServer, AuthorizationCodeInterface $authorizationCode, AccessTokenInterface $accessToken, IO $io = null)
