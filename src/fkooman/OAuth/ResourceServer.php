@@ -2,7 +2,7 @@
 
 namespace fkooman\OAuth;
 
-class ResourceServerInfo
+class ResourceServer
 {
     /** @var string */
     private $resourceServerId;

@@ -17,12 +17,12 @@
 
 namespace fkooman\OAuth\Test;
 
-use fkooman\OAuth\AccessTokenInterface;
+use fkooman\OAuth\AccessTokenStorageInterface;
 use fkooman\OAuth\AccessToken;
 use fkooman\Json\Json;
 use fkooman\Base64\Base64Url;
 
-class TestAccessToken implements AccessTokenInterface
+class TestAccessToken implements AccessTokenStorageInterface
 {
     public function storeAccessToken(AccessToken $accessToken)
     {

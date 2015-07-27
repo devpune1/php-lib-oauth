@@ -2,7 +2,7 @@
 
 namespace fkooman\OAuth;
 
-class ClientInfo
+class Client
 {
     /** @var string */
     private $clientId;
@@ -16,12 +16,16 @@ class ClientInfo
     /** @var string */
     private $scope;
 
-    public function __construct($clientId, $responseType, $redirectUri, $scope)
+    /** @var string */
+    private $secret;
+
+    public function __construct($clientId, $responseType, $redirectUri, $scope, $secret)
     {
         $this->clientId = $clientId;
         $this->responseType = $responseType;
         $this->redirectUri = $redirectUri;
         $this->scope = $scope;
+        $this->secret = $secret;
     }
 
     public static function fromArray(array $client)
@@ -30,7 +34,8 @@ class ClientInfo
             $client['client_id'],
             $client['response_type'],
             $client['redirect_uri'],
-            $client['scope']
+            $client['scope'],
+            $client['secret']
         );
     }
 
@@ -52,5 +57,10 @@ class ClientInfo
     public function getScope()
     {
         return $this->scope;
+    }
+
+    public function getSecret()
+    {
+        return $this->secret;
     }
 }

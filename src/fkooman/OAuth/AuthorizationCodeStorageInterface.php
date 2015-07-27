@@ -2,7 +2,7 @@
 
 namespace fkooman\OAuth;
 
-interface AuthorizationCodeInterface
+interface AuthorizationCodeStorageInterface
 {
     /**
      * Store an authorization code.

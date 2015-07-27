@@ -11,31 +11,31 @@ use fkooman\IO\IO;
 
 class OAuthServer
 {
-    /** @var TemplateInterface */
+    /** @var TemplateManagerInterface */
     private $templateManager;
 
-    /** @var ClientInterface */
-    private $client;
+    /** @var ClientStorageInterface */
+    private $clientStorage;
 
-    /** @var ResourceServerInterface */
-    private $resourceServer;
+    /** @var ResourceServerStorageInterface */
+    private $resourceServerStorage;
 
-    /** @var AuthorizationCodeInterface */
-    private $authorizationCode;
+    /** @var AuthorizationCodeStorageInterface */
+    private $authorizationCodeStorage;
 
-    /** @var AccessTokenInterface */
-    private $accessToken;
+    /** @var AccessTokenStorageInterface */
+    private $accessTokenStorage;
 
     /** @var \fkooman\IO\IO */
     private $io;
 
-    public function __construct(TemplateInterface $templateManager, ClientInterface $client, ResourceServerInterface $resourceServer, AuthorizationCodeInterface $authorizationCode, AccessTokenInterface $accessToken, IO $io = null)
+    public function __construct(TemplateManagerInterface $templateManager, ClientStorageInterface $clientStorage, ResourceServerStorageInterface $resourceServerStorage, AuthorizationCodeStorageInterface $authorizationCodeStorage, AccessTokenStorageInterface $accessTokenStorage, IO $io = null)
     {
         $this->templateManager = $templateManager;
-        $this->client = $client;
-        $this->resourceServer = $resourceServer;
-        $this->authorizationCode = $authorizationCode;
-        $this->accessToken = $accessToken;
+        $this->clientStorage = $clientStorage;
+        $this->resourceServerStorage = $resourceServerStorage;
+        $this->authorizationCodeStorage = $authorizationCodeStorage;
+        $this->accessTokenStorage = $accessTokenStorage;
         if (null === $io) {
             $io = new IO();
         }
@@ -52,11 +52,31 @@ class OAuthServer
         return $this->templateManager;
     }
 
+    /**
+     * Get the resource server storage.
+     *
+     * @return ResourceServerStorageInterface the resource server storage
+     */
+    public function getResourceServerStorage()
+    {
+        return $this->resourceServerStorage;
+    }
+
+    /**
+     * Get the resource server storage.
+     *
+     * @return ClientStorageInterface the client storage
+     */
+    public function getClientStorage()
+    {
+        return $this->clientStorage;
+    }
+
     public function getAuthorize(Request $request, UserInfoInterface $userInfo)
     {
         $authorizeRequest = RequestValidation::validateAuthorizeRequest($request);
 
-        $clientInfo = $this->client->getClient(
+        $clientInfo = $this->clientStorage->getClient(
             $authorizeRequest['client_id'],
             $authorizeRequest['response_type'],
             $authorizeRequest['redirect_uri'],
@@ -86,7 +106,7 @@ class OAuthServer
 
         if ('yes' === $postAuthorizeRequest['approval']) {
             // approved
-            $code = $this->authorizationCode->storeAuthorizationCode(
+            $code = $this->authorizationCodeStorage->storeAuthorizationCode(
                 new AuthorizationCode(
                     $postAuthorizeRequest['client_id'],
                     $userInfo->getUserId(),
@@ -131,10 +151,10 @@ class OAuthServer
     public function postToken(Request $request)
     {
         $tokenRequest = RequestValidation::validateTokenRequest($request);
-        if (!$this->authorizationCode->isFreshAuthorizationCode($tokenRequest['code'])) {
+        if (!$this->authorizationCodeStorage->isFreshAuthorizationCode($tokenRequest['code'])) {
             throw new BadRequestException('authorization code can not be replayed');
         }
-        $authorizationCode = $this->authorizationCode->retrieveAuthorizationCode($tokenRequest['code']);
+        $authorizationCode = $this->authorizationCodeStorage->retrieveAuthorizationCode($tokenRequest['code']);
 
         $iat = $authorizationCode->getIssuedAt();
         if ($this->io->getTime() > $iat + 600) {
@@ -157,7 +177,7 @@ class OAuthServer
         // FIXME: keep log of used codes (must not allowed to be replayed)
 
         // create an access token
-        $accessToken = $this->accessToken->storeAccessToken(
+        $accessToken = $this->accessTokenStorage->storeAccessToken(
             new AccessToken(
                 $authorizationCode->getClientId(),
                 $authorizationCode->getUserId(),
@@ -183,7 +203,7 @@ class OAuthServer
     public function postIntrospect(Request $request, UserInfoInterface $userInfo)
     {
         $introspectRequest = RequestValidation::validateIntrospectRequest($request);
-        $accessToken = $this->accessToken->retrieveAccessToken($introspectRequest['token']);
+        $accessToken = $this->accessTokenStorage->retrieveAccessToken($introspectRequest['token']);
 
         if (false === $accessToken) {
             $body = array(
@@ -191,7 +211,7 @@ class OAuthServer
             );
         } else {
             // FIXME: use better scope matching...
-            $resourceServerInfo = $this->resourceServer->getResourceServer($userInfo->getUserId());
+            $resourceServerInfo = $this->resourceServerStorage->getResourceServer($userInfo->getUserId());
             if ($resourceServerInfo->getScope() !== $accessToken->getScope()) {
                 $body = array(
                     'active' => false,

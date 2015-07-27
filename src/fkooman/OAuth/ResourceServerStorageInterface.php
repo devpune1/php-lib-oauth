@@ -2,7 +2,7 @@
 
 namespace fkooman\OAuth;
 
-interface ResourceServerInterface
+interface ResourceServerStorageInterface
 {
     /**
      * Retrieve a resource server based on resourceServerId.

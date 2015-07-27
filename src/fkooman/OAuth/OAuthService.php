@@ -5,18 +5,60 @@ namespace fkooman\OAuth;
 use fkooman\Rest\Service;
 use fkooman\Http\Request;
 use fkooman\Rest\Plugin\Authentication\UserInfoInterface;
+use fkooman\Rest\Plugin\Authentication\AuthenticationPluginInterface;
 
 class OAuthService extends Service
 {
     /** @var OAuthServer */
     protected $server;
 
-    public function __construct(OAuthServer $server)
+    public function __construct(OAuthServer $server, AuthenticationPluginInterface $AuthenticationPlugin)
     {
         parent::__construct();
 
         $this->server = $server;
+        $this->registerAuthenticationPlugin($authenticationPlugin);
         $this->registerRoutes();
+    }
+
+    private function registerAuthenticationPlugin(AuthenticationPluginInterface $authenticationPlugin)
+    {
+        // register 'user' authentication
+        $authenticationPlugin->register($authenticationPlugin, 'user');
+
+#        // register 'client' authentication
+#        $clientAuthentication = new BasicAuthentication(
+#            function ($clientId) {
+#                $client = $server->getClientStorage()->getClient($clientId);
+#                if (false === $client) {
+#                    return false;
+#                }
+
+#                return $client->getSecret();
+#            },
+#            array(
+#                'realm' => 'OAuth',
+#            )
+#        );
+#        $authenticationPlugin->register($resourceServerAuthentication, 'client');
+
+        // register 'resource server' authentication
+        $resourceServerAuthentication = new BasicAuthentication(
+            function ($resourceServerId) {
+                $resourceServer = $server->getResourceServerStorage()->getResourceServer($resourceServerId);
+                if (false === $resourceServer) {
+                    return false;
+                }
+
+                return $resourceServer->getSecret();
+            },
+            array(
+                'realm' => 'OAuth',
+            )
+        );
+        $authenticationPlugin->register($resourceServerAuthentication, 'resource_server');
+
+        $this->getPluginRegistry()->registerDefaultPlugin($authenticationPlugin);
     }
 
     private function registerRoutes()

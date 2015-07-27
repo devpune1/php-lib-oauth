@@ -46,9 +46,9 @@ class OAuthServerTest extends PHPUnit_Framework_TestCase
         $testAuthorizationCode = new TestAuthorizationCode();
         $testAccessToken = new TestAccessToken();
 
-        $resourceServer = $this->getMockBuilder('fkooman\OAuth\ResourceServerInterface')->getMock();
+        $resourceServer = $this->getMockBuilder('fkooman\OAuth\ResourceServerStorageInterface')->getMock();
         $resourceServer->method('getResourceServer')->willReturn(
-            new ResourceServerInfo(
+            new ResourceServer(
                 'r_id',
                 'post',
                 'SECRET'

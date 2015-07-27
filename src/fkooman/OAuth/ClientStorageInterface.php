@@ -2,7 +2,7 @@
 
 namespace fkooman\OAuth;
 
-interface ClientInterface
+interface ClientStorageInterface
 {
     /**
      * Retrieve a client based on clientId, redirectUri and scope.

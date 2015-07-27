@@ -2,7 +2,7 @@
 
 namespace fkooman\OAuth;
 
-interface AccessTokenInterface
+interface AccessTokenStorageInterface
 {
     /**
      * Store an access token.

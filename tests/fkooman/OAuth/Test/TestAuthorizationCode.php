@@ -17,12 +17,12 @@
 
 namespace fkooman\OAuth\Test;
 
-use fkooman\OAuth\AuthorizationCodeInterface;
+use fkooman\OAuth\AuthorizationCodeStorageInterface;
 use fkooman\OAuth\AuthorizationCode;
 use fkooman\Json\Json;
 use fkooman\Base64\Base64Url;
 
-class TestAuthorizationCode implements AuthorizationCodeInterface
+class TestAuthorizationCode implements AuthorizationCodeStorageInterface
 {
     public function storeAuthorizationCode(AuthorizationCode $authorizationCode)
     {

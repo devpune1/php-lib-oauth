@@ -17,13 +17,13 @@
 
 namespace fkooman\OAuth\Test;
 
-use fkooman\OAuth\ClientInterface;
-use fkooman\OAuth\ClientInfo;
+use fkooman\OAuth\ClientStorageInterface;
+use fkooman\OAuth\Client;
 
-class TestClient implements ClientInterface
+class TestClient implements ClientStorageInterface
 {
     public function getClient($clientId, $responseType, $redirectUri, $scope)
     {
-        return new ClientInfo($clientId, $responseType, $redirectUri, $scope);
+        return new Client($clientId, $responseType, $redirectUri, $scope, null);
     }
 }

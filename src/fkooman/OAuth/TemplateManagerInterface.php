@@ -2,7 +2,7 @@
 
 namespace fkooman\OAuth;
 
-interface TemplateInterface
+interface TemplateManagerInterface
 {
     /**
      * Render the template.

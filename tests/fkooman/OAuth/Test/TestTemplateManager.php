@@ -17,9 +17,9 @@
 
 namespace fkooman\OAuth\Test;
 
-use fkooman\OAuth\TemplateInterface;
+use fkooman\OAuth\TemplateManagerInterface;
 
-class TestTemplateManager implements TemplateInterface
+class TestTemplateManager implements TemplateManagerInterface
 {
     public function render($templateName, array $templateVariables = array())
     {
