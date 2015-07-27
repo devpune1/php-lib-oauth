@@ -4,6 +4,7 @@ namespace fkooman\OAuth;
 
 use fkooman\Rest\Service;
 use fkooman\Http\Request;
+use fkooman\Rest\Plugin\Authentication\AuthenticationPlugin;
 use fkooman\Rest\Plugin\Authentication\UserInfoInterface;
 use fkooman\Rest\Plugin\Authentication\AuthenticationPluginInterface;
 
@@ -12,19 +13,21 @@ class OAuthService extends Service
     /** @var OAuthServer */
     protected $server;
 
-    public function __construct(OAuthServer $server, AuthenticationPluginInterface $authenticationPlugin)
+    public function __construct(OAuthServer $server, AuthenticationPluginInterface $userAuthenticationPlugin)
     {
         parent::__construct();
 
         $this->server = $server;
-        $this->registerAuthenticationPlugin($authenticationPlugin);
+        $this->registerAuthenticationPlugin($userAuthenticationPlugin);
         $this->registerRoutes();
     }
 
-    private function registerAuthenticationPlugin(AuthenticationPluginInterface $authenticationPlugin)
+    private function registerAuthenticationPlugin(AuthenticationPluginInterface $userAuthenticationPlugin)
     {
+        $authenticationPlugin = new AuthenticationPlugin();
+
         // register 'user' authentication
-        $authenticationPlugin->register($authenticationPlugin, 'user');
+        $authenticationPlugin->register($userAuthenticationPlugin, 'user');
 
 #        // register 'client' authentication
 #        $clientAuthentication = new BasicAuthentication(
@@ -37,7 +40,7 @@ class OAuthService extends Service
 #                return $client->getSecret();
 #            },
 #            array(
-#                'realm' => 'OAuth',
+#                'realm' => 'OAuth AS',
 #            )
 #        );
 #        $authenticationPlugin->register($resourceServerAuthentication, 'client');
@@ -53,7 +56,7 @@ class OAuthService extends Service
                 return $resourceServer->getSecret();
             },
             array(
-                'realm' => 'OAuth',
+                'realm' => 'OAuth AS',
             )
         );
         $authenticationPlugin->register($resourceServerAuthentication, 'resource_server');
