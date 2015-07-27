@@ -12,7 +12,7 @@ class OAuthService extends Service
     /** @var OAuthServer */
     protected $server;
 
-    public function __construct(OAuthServer $server, AuthenticationPluginInterface $AuthenticationPlugin)
+    public function __construct(OAuthServer $server, AuthenticationPluginInterface $authenticationPlugin)
     {
         parent::__construct();
 
