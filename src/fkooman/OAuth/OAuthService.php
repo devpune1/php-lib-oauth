@@ -4,6 +4,7 @@ namespace fkooman\OAuth;
 
 use fkooman\Rest\Service;
 use fkooman\Http\Request;
+use fkooman\Rest\Plugin\Authentication\Basic\BasicAuthentication;
 use fkooman\Rest\Plugin\Authentication\AuthenticationPlugin;
 use fkooman\Rest\Plugin\Authentication\UserInfoInterface;
 use fkooman\Rest\Plugin\Authentication\AuthenticationPluginInterface;
