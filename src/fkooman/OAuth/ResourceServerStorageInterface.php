@@ -9,8 +9,8 @@ interface ResourceServerStorageInterface
      *
      * @param string $resourceServerId the resource server ID
      *
-     * @return ResourceServerInfo|false if the resource server exists it
-     *                                  returns ResourceServer, otherwise false
+     * @return ResourceServer|false if the resource server exists it
+     *                              returns ResourceServer, otherwise false
      */
     public function getResourceServer($resourceServerId);
 }

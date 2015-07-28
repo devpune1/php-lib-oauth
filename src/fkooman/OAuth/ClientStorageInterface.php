@@ -12,8 +12,8 @@ interface ClientStorageInterface
      * @param string|null $redirectUri  the redirectUri
      * @param string|null $scope        the scope
      *
-     * @return ClientInfo|false if the client exists with given parameters it
-     *                          returns ClientInfo, otherwise false
+     * @return Client|false if the client exists with given parameters it
+     *                      returns ClientInfo, otherwise false
      */
     public function getClient($clientId, $responseType, $redirectUri, $scope);
 }
