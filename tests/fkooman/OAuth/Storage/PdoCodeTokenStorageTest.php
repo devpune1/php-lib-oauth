@@ -15,7 +15,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace fkooman\OAuth\Impl;
+namespace fkooman\OAuth\Storage;
 
 use PHPUnit_Framework_TestCase;
 use fkooman\OAuth\AuthorizationCode;

@@ -1,6 +1,6 @@
 <?php
 
-namespace fkooman\OAuth\Impl;
+namespace fkooman\OAuth\Storage;
 
 use fkooman\OAuth\AuthorizationCodeStorageInterface;
 use fkooman\OAuth\AccessTokenStorageInterface;
