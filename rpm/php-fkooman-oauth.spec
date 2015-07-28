@@ -20,6 +20,7 @@ Provides:   php-composer(%{composer_vendor}/%{composer_project}) = %{version}
 Requires:   php(language) >= 5.3.3
 Requires:   php-filter
 Requires:   php-pcre
+Requires:   php-pdo
 Requires:   php-standard
 
 %description

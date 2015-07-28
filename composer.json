@@ -16,6 +16,7 @@
     "require": {
         "ext-filter": "*",
         "ext-pcre": "*",
+        "ext-pdo": "*",
         "fkooman/io": "^1.0.0",
         "fkooman/rest": "^1.0.0",
         "fkooman/rest-plugin-authentication": "^1.0.0",
