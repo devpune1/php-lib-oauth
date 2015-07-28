@@ -19,9 +19,10 @@ namespace fkooman\OAuth\Impl;
 
 use PHPUnit_Framework_TestCase;
 use fkooman\OAuth\AuthorizationCode;
+use fkooman\OAuth\AccessToken;
 use PDO;
 
-class PdoAuthorizationCodeStorageTest extends PHPUnit_Framework_TestCase
+class PdoCodeTokenStorageTest extends PHPUnit_Framework_TestCase
 {
     /** @var PdoAuthorizationCodeStorage */
     private $storage;
@@ -31,7 +32,7 @@ class PdoAuthorizationCodeStorageTest extends PHPUnit_Framework_TestCase
         $io = $this->getMockBuilder('fkooman\IO\IO')->getMock();
         $io->method('getRandom')->willReturn('112233ff');
 
-        $this->storage = new PdoAuthorizationCodeStorage(
+        $this->storage = new PdoCodeTokenStorage(
             new PDO(
                 $GLOBALS['DB_DSN'],
                 $GLOBALS['DB_USER'],
@@ -79,9 +80,43 @@ class PdoAuthorizationCodeStorageTest extends PHPUnit_Framework_TestCase
         $this->assertFalse($this->storage->retrieveAuthorizationCode('112233ff'));
     }
 
-    public function testLog()
+    public function testCodeLog()
     {
         $this->assertTrue($this->storage->isFreshAuthorizationCode('112233ff'));
         $this->assertFalse($this->storage->isFreshAuthorizationCode('112233ff'));
+    }
+
+    public function testInsertToken()
+    {
+        $accessToken = AccessToken::fromArray(
+            array(
+                'client_id' => 'foo',
+                'user_id' => 'bar',
+                'issued_at' => 123456789,
+                'scope' => 'foo bar',
+            )
+        );
+
+        $this->assertSame('112233ff', $this->storage->storeAccessToken($accessToken));
+    }
+
+    public function testGetToken()
+    {
+        $accessToken = AccessToken::fromArray(
+            array(
+                'client_id' => 'foo',
+                'user_id' => 'bar',
+                'issued_at' => 123456789,
+                'scope' => 'foo bar',
+            )
+        );
+
+        $this->assertSame('112233ff', $this->storage->storeAccessToken($accessToken));
+        $this->assertSame('foo', $this->storage->retrieveAccessToken('112233ff')->getClientId());
+    }
+
+    public function testGetMissingToken()
+    {
+        $this->assertFalse($this->storage->retrieveAccessToken('112233ff'));
     }
 }

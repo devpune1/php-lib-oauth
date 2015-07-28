@@ -168,7 +168,7 @@ class OAuthServerTest extends PHPUnit_Framework_TestCase
                 'Cache-Control: no-store',
                 'Pragma: no-cache',
                 '',
-                '{"access_token":"eyJjbGllbnRfaWQiOiJodHRwczpcL1wvbG9jYWxob3N0IiwidXNlcl9pZCI6ImFkbWluIiwiaXNzdWVkX2F0IjoxMjM0NTY3ODkwLCJyZWRpcmVjdF91cmkiOiJodHRwczpcL1wvbG9jYWxob3N0XC9jYiIsInNjb3BlIjoicG9zdCJ9","scope":"post"}',
+                '{"access_token":"eyJjbGllbnRfaWQiOiJodHRwczpcL1wvbG9jYWxob3N0IiwidXNlcl9pZCI6ImFkbWluIiwiaXNzdWVkX2F0IjoxMjM0NTY3ODkwLCJzY29wZSI6Imh0dHBzOlwvXC9sb2NhbGhvc3RcL2NiIn0","scope":"post"}',
             ),
             $this->oauthServer->postToken($request)->toArray()
         );

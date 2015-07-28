@@ -3,11 +3,13 @@
 namespace fkooman\OAuth\Impl;
 
 use fkooman\OAuth\AuthorizationCodeStorageInterface;
+use fkooman\OAuth\AccessTokenStorageInterface;
 use fkooman\OAuth\AuthorizationCode;
+use fkooman\OAuth\AccessToken;
 use fkooman\IO\IO;
 use PDO;
 
-class PdoAuthorizationCodeStorage implements AuthorizationCodeStorageInterface
+class PdoCodeTokenStorage implements AuthorizationCodeStorageInterface, AccessTokenStorageInterface
 {
     /** @var \PDO */
     private $db;
@@ -95,6 +97,44 @@ class PdoAuthorizationCodeStorage implements AuthorizationCodeStorageInterface
         return true;
     }
 
+    public function storeAccessToken(AccessToken $accessToken)
+    {
+        $generatedToken = $this->io->getRandom();
+
+        $stmt = $this->db->prepare(
+            sprintf(
+                'INSERT INTO %s (token, client_id, user_id, issued_at, scope) VALUES(:token, :client_id, :user_id, :issued_at, :scope)',
+                $this->prefix.'access_tokens'
+            )
+        );
+        $stmt->bindValue(':token', $generatedToken, PDO::PARAM_STR);
+        $stmt->bindValue(':client_id', $accessToken->getClientId(), PDO::PARAM_STR);
+        $stmt->bindValue(':user_id', $accessToken->getUserId(), PDO::PARAM_STR);
+        $stmt->bindValue(':issued_at', $accessToken->getIssuedAt(), PDO::PARAM_INT);
+        $stmt->bindValue(':scope', $accessToken->getScope(), PDO::PARAM_STR);
+        $stmt->execute();
+
+        return $generatedToken;
+    }
+
+    public function retrieveAccessToken($accessToken)
+    {
+        $stmt = $this->db->prepare(
+            sprintf(
+                'SELECT client_id, user_id, issued_at, scope FROM %s WHERE token = :token',
+                $this->prefix.'access_tokens'
+            )
+        );
+        $stmt->bindValue(':token', $accessToken, PDO::PARAM_STR);
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        if (false === $result) {
+            return false;
+        }
+
+        return AccessToken::fromArray($result);
+    }
+
     public static function createTableQueries($prefix)
     {
         $query = array();
@@ -118,6 +158,18 @@ class PdoAuthorizationCodeStorage implements AuthorizationCodeStorageInterface
                 UNIQUE (code)
             )',
             $prefix.'authorization_codes_log'
+        );
+
+        $query[] = sprintf(
+            'CREATE TABLE IF NOT EXISTS %s (
+                token VARCHAR(255) NOT NULL,
+                client_id VARCHAR(255) NOT NULL,
+                user_id VARCHAR(255) NOT NULL,
+                issued_at INT NOT NULL,
+                scope VARCHAR(255) NOT NULL,
+                PRIMARY KEY (token)
+            )',
+            $prefix.'access_tokens'
         );
 
         return $query;

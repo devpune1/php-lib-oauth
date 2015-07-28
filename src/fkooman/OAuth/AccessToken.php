@@ -14,17 +14,13 @@ class AccessToken
     private $issuedAt;
 
     /** @var string */
-    private $redirectUri;
-
-    /** @var string */
     private $scope;
 
-    public function __construct($clientId, $userId, $issuedAt, $redirectUri, $scope)
+    public function __construct($clientId, $userId, $issuedAt, $scope)
     {
         $this->clientId = $clientId;
         $this->userId = $userId;
         $this->issuedAt = $issuedAt;
-        $this->redirectUri = $redirectUri;
         $this->scope = $scope;
     }
 
@@ -34,7 +30,6 @@ class AccessToken
             $accessToken['client_id'],
             $accessToken['user_id'],
             $accessToken['issued_at'],
-            $accessToken['redirect_uri'],
             $accessToken['scope']
         );
     }
@@ -52,11 +47,6 @@ class AccessToken
     public function getIssuedAt()
     {
         return $this->issuedAt;
-    }
-
-    public function getRedirectUri()
-    {
-        return $this->redirectUri;
     }
 
     public function getScope()
