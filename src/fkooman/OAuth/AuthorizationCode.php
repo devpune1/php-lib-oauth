@@ -33,7 +33,7 @@ class AuthorizationCode
         return new self(
             $authorizationCode['client_id'],
             $authorizationCode['user_id'],
-            $authorizationCode['iat'],
+            $authorizationCode['issued_at'],
             $authorizationCode['redirect_uri'],
             $authorizationCode['scope']
         );

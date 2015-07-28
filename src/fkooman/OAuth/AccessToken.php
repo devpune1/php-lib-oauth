@@ -33,7 +33,7 @@ class AccessToken
         return new self(
             $accessToken['client_id'],
             $accessToken['user_id'],
-            $accessToken['iat'],
+            $accessToken['issued_at'],
             $accessToken['redirect_uri'],
             $accessToken['scope']
         );

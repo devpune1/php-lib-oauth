@@ -31,7 +31,7 @@ class TestAuthorizationCode implements AuthorizationCodeStorageInterface
                 array(
                     'client_id' => $authorizationCode->getClientId(),
                     'user_id' => $authorizationCode->getUserId(),
-                    'iat' => $authorizationCode->getIssuedAt(),
+                    'issued_at' => $authorizationCode->getIssuedAt(),
                     'redirect_uri' => $authorizationCode->getRedirectUri(),
                     'scope' => $authorizationCode->getScope(),
                 )

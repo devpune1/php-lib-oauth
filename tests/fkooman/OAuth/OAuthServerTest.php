@@ -108,7 +108,7 @@ class OAuthServerTest extends PHPUnit_Framework_TestCase
             array(
                 'HTTP/1.1 302 Found',
                 'Content-Type: text/html;charset=UTF-8',
-                'Location: https://localhost/cb?code=eyJjbGllbnRfaWQiOiJodHRwczpcL1wvbG9jYWxob3N0IiwidXNlcl9pZCI6ImFkbWluIiwiaWF0IjoxMjM0NTY3ODkwLCJyZWRpcmVjdF91cmkiOiJodHRwczpcL1wvbG9jYWxob3N0XC9jYiIsInNjb3BlIjoicG9zdCJ9&state=12345',
+                'Location: https://localhost/cb?code=eyJjbGllbnRfaWQiOiJodHRwczpcL1wvbG9jYWxob3N0IiwidXNlcl9pZCI6ImFkbWluIiwiaXNzdWVkX2F0IjoxMjM0NTY3ODkwLCJyZWRpcmVjdF91cmkiOiJodHRwczpcL1wvbG9jYWxob3N0XC9jYiIsInNjb3BlIjoicG9zdCJ9&state=12345',
                 '',
                 '',
             ),
@@ -153,7 +153,7 @@ class OAuthServerTest extends PHPUnit_Framework_TestCase
                 'REQUEST_METHOD' => 'POST',
             ),
             array(
-                'code' => 'eyJjbGllbnRfaWQiOiJodHRwczpcL1wvbG9jYWxob3N0IiwidXNlcl9pZCI6ImFkbWluIiwiaWF0IjoxMjM0NTY3ODkwLCJyZWRpcmVjdF91cmkiOiJodHRwczpcL1wvbG9jYWxob3N0XC9jYiIsInNjb3BlIjoicG9zdCJ9',
+                'code' => 'eyJjbGllbnRfaWQiOiJodHRwczpcL1wvbG9jYWxob3N0IiwidXNlcl9pZCI6ImFkbWluIiwiaXNzdWVkX2F0IjoxMjM0NTY3ODkwLCJyZWRpcmVjdF91cmkiOiJodHRwczpcL1wvbG9jYWxob3N0XC9jYiIsInNjb3BlIjoicG9zdCJ9',
                 'scope' => 'post',
                 'redirect_uri' => 'https://localhost/cb',
                 'grant_type' => 'authorization_code',
@@ -168,7 +168,7 @@ class OAuthServerTest extends PHPUnit_Framework_TestCase
                 'Cache-Control: no-store',
                 'Pragma: no-cache',
                 '',
-                '{"access_token":"eyJjbGllbnRfaWQiOiJodHRwczpcL1wvbG9jYWxob3N0IiwidXNlcl9pZCI6ImFkbWluIiwiaWF0IjoxMjM0NTY3ODkwLCJyZWRpcmVjdF91cmkiOiJodHRwczpcL1wvbG9jYWxob3N0XC9jYiIsInNjb3BlIjoicG9zdCJ9","scope":"post"}',
+                '{"access_token":"eyJjbGllbnRfaWQiOiJodHRwczpcL1wvbG9jYWxob3N0IiwidXNlcl9pZCI6ImFkbWluIiwiaXNzdWVkX2F0IjoxMjM0NTY3ODkwLCJyZWRpcmVjdF91cmkiOiJodHRwczpcL1wvbG9jYWxob3N0XC9jYiIsInNjb3BlIjoicG9zdCJ9","scope":"post"}',
             ),
             $this->oauthServer->postToken($request)->toArray()
         );
@@ -216,7 +216,7 @@ class OAuthServerTest extends PHPUnit_Framework_TestCase
                 'REQUEST_METHOD' => 'POST',
             ),
             array(
-                'token' => 'eyJjbGllbnRfaWQiOiJodHRwczpcL1wvbG9jYWxob3N0IiwidXNlcl9pZCI6ImFkbWluIiwiaWF0IjoxMjM0NTY3ODkwLCJyZWRpcmVjdF91cmkiOiJodHRwczpcL1wvbG9jYWxob3N0XC9jYiIsInNjb3BlIjoicG9zdCJ9',
+                'token' => 'eyJjbGllbnRfaWQiOiJodHRwczpcL1wvbG9jYWxob3N0IiwidXNlcl9pZCI6ImFkbWluIiwiaXNzdWVkX2F0IjoxMjM0NTY3ODkwLCJyZWRpcmVjdF91cmkiOiJodHRwczpcL1wvbG9jYWxob3N0XC9jYiIsInNjb3BlIjoicG9zdCJ9',
             )
         );
 

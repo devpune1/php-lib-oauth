@@ -156,8 +156,8 @@ class OAuthServer
         }
         $authorizationCode = $this->authorizationCodeStorage->retrieveAuthorizationCode($tokenRequest['code']);
 
-        $iat = $authorizationCode->getIssuedAt();
-        if ($this->io->getTime() > $iat + 600) {
+        $issuedAt = $authorizationCode->getIssuedAt();
+        if ($this->io->getTime() > $issuedAt + 600) {
             throw new BadRequestException('authorization code expired');
         }
 

@@ -31,7 +31,7 @@ class TestAccessToken implements AccessTokenStorageInterface
                 array(
                     'client_id' => $accessToken->getClientId(),
                     'user_id' => $accessToken->getUserId(),
-                    'iat' => $accessToken->getIssuedAt(),
+                    'issued_at' => $accessToken->getIssuedAt(),
                     'redirect_uri' => $accessToken->getRedirectUri(),
                     'scope' => $accessToken->getScope(),
                 )
