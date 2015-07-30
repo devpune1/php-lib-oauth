@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "adf46ec2294acf0af688bfc85c96b818",
+    "hash": "55e12cfcf59feebc3238df0a4c86978e",
     "packages": [
         {
             "name": "fkooman/io",
@@ -217,6 +217,44 @@
             "time": "2015-07-20 13:36:53"
         },
         {
+            "name": "fkooman/tpl",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/fkooman/php-lib-tpl.git",
+                "reference": "98e9a69cb234930edfe3cfb99bba9447f5893d58"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/fkooman/php-lib-tpl/zipball/98e9a69cb234930edfe3cfb99bba9447f5893d58",
+                "reference": "98e9a69cb234930edfe3cfb99bba9447f5893d58",
+                "shasum": ""
+            },
+            "require": {
+                "ext-spl": "*",
+                "php": ">= 5.3.3",
+                "twig/twig": "^1.18"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "fkooman\\Tpl\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "François Kooman",
+                    "email": "fkooman@tuxed.net"
+                }
+            ],
+            "description": "Simple Template Abstraction Library",
+            "time": "2015-07-30 14:19:32"
+        },
+        {
             "name": "ircmaxell/password-compat",
             "version": "v1.0.4",
             "source": {
@@ -257,6 +295,63 @@
                 "password"
             ],
             "time": "2014-11-20 16:49:30"
+        },
+        {
+            "name": "twig/twig",
+            "version": "v1.18.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/twigphp/Twig.git",
+                "reference": "e8e6575abf6102af53ec283f7f14b89e304fa602"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/twigphp/Twig/zipball/e8e6575abf6102af53ec283f7f14b89e304fa602",
+                "reference": "e8e6575abf6102af53ec283f7f14b89e304fa602",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.2.7"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.18-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Twig_": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com",
+                    "homepage": "http://fabien.potencier.org",
+                    "role": "Lead Developer"
+                },
+                {
+                    "name": "Armin Ronacher",
+                    "email": "armin.ronacher@active-4.com",
+                    "role": "Project Founder"
+                },
+                {
+                    "name": "Twig Team",
+                    "homepage": "http://twig.sensiolabs.org/contributors",
+                    "role": "Contributors"
+                }
+            ],
+            "description": "Twig, the flexible, fast, and secure template language for PHP",
+            "homepage": "http://twig.sensiolabs.org",
+            "keywords": [
+                "templating"
+            ],
+            "time": "2015-06-06 23:31:24"
         }
     ],
     "packages-dev": [

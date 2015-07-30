@@ -5,6 +5,7 @@ namespace fkooman\OAuth;
 use fkooman\Rest\Plugin\Authentication\UserInfoInterface;
 use fkooman\Http\Request;
 use fkooman\Http\RedirectResponse;
+use fkooman\Tpl\TemplateManagerInterface;
 use fkooman\Http\JsonResponse;
 use fkooman\Http\Exception\BadRequestException;
 use fkooman\IO\IO;

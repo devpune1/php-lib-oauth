@@ -29,6 +29,8 @@ Requires:   php-composer(fkooman/io) >= 1.0.0
 Requires:   php-composer(fkooman/io) < 2.0.0
 Requires:   php-composer(fkooman/rest) >= 1.0.0
 Requires:   php-composer(fkooman/rest) < 2.0.0
+Requires:   php-composer(fkooman/tpl) >= 1.0.0
+Requires:   php-composer(fkooman/tpl) < 2.0.0
 Requires:   php-composer(fkooman/php-lib-rest-plugin-basic) >= 1.0.0
 Requires:   php-composer(fkooman/php-lib-rest-plugin-basic) < 2.0.0
 

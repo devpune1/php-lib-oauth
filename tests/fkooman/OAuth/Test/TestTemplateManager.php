@@ -17,10 +17,14 @@
 
 namespace fkooman\OAuth\Test;
 
-use fkooman\OAuth\TemplateManagerInterface;
+use fkooman\Tpl\TemplateManagerInterface;
 
 class TestTemplateManager implements TemplateManagerInterface
 {
+    public function setDefault(array $templateVariables)
+    {
+    }
+
     public function render($templateName, array $templateVariables = array())
     {
         return array($templateName => $templateVariables);
