@@ -218,16 +218,16 @@
         },
         {
             "name": "fkooman/tpl",
-            "version": "1.0.0",
+            "version": "1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fkooman/php-lib-tpl.git",
-                "reference": "98e9a69cb234930edfe3cfb99bba9447f5893d58"
+                "reference": "4a7e2211dd4b214b30b276e0f01724776ffaf955"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fkooman/php-lib-tpl/zipball/98e9a69cb234930edfe3cfb99bba9447f5893d58",
-                "reference": "98e9a69cb234930edfe3cfb99bba9447f5893d58",
+                "url": "https://api.github.com/repos/fkooman/php-lib-tpl/zipball/4a7e2211dd4b214b30b276e0f01724776ffaf955",
+                "reference": "4a7e2211dd4b214b30b276e0f01724776ffaf955",
                 "shasum": ""
             },
             "require": {
@@ -252,7 +252,7 @@
                 }
             ],
             "description": "Simple Template Abstraction Library",
-            "time": "2015-07-30 14:19:32"
+            "time": "2015-07-30 17:10:24"
         },
         {
             "name": "ircmaxell/password-compat",
