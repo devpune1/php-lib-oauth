@@ -17,11 +17,12 @@
         "ext-filter": "*",
         "ext-pcre": "*",
         "ext-pdo": "*",
+        "ext-spl": "*",
         "fkooman/io": "^1.0.0",
         "fkooman/json": "^1.0.0",
         "fkooman/rest": "^1.0.0",
-	"fkooman/tpl": "^1.0.0",
         "fkooman/rest-plugin-authentication-basic": "^1.0.0",
+        "fkooman/tpl": "^1.0.0",
         "php": ">= 5.3.3"
     },
     "require-dev": {
