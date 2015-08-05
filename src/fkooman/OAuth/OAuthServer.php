@@ -183,7 +183,6 @@ class OAuthServer
                 $authorizationCode->getClientId(),
                 $authorizationCode->getUserId(),
                 $this->io->getTime(),
-                $authorizationCode->getRedirectUri(),
                 $authorizationCode->getScope()
             )
         );

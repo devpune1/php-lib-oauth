@@ -14,7 +14,6 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 namespace fkooman\OAuth;
 
 require_once __DIR__.'/Test/TestTemplateManager.php';
@@ -168,7 +167,7 @@ class OAuthServerTest extends PHPUnit_Framework_TestCase
                 'Cache-Control: no-store',
                 'Pragma: no-cache',
                 '',
-                '{"access_token":"eyJjbGllbnRfaWQiOiJodHRwczpcL1wvbG9jYWxob3N0IiwidXNlcl9pZCI6ImFkbWluIiwiaXNzdWVkX2F0IjoxMjM0NTY3ODkwLCJzY29wZSI6Imh0dHBzOlwvXC9sb2NhbGhvc3RcL2NiIn0","scope":"post"}',
+                '{"access_token":"eyJjbGllbnRfaWQiOiJodHRwczpcL1wvbG9jYWxob3N0IiwidXNlcl9pZCI6ImFkbWluIiwiaXNzdWVkX2F0IjoxMjM0NTY3ODkwLCJzY29wZSI6InBvc3QifQ","scope":"post"}',
             ),
             $this->oauthServer->postToken($request)->toArray()
         );
