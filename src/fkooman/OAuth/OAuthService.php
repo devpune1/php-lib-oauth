@@ -33,7 +33,7 @@ class OAuthService extends Service
 #        // register 'client' authentication
 #        $clientAuthentication = new BasicAuthentication(
 #            function ($clientId) {
-#                $client = $server->getClientStorage()->getClient($clientId);
+#                $client = $this->server->getClientStorage()->getClient($clientId);
 #                if (false === $client) {
 #                    return false;
 #                }
@@ -49,7 +49,7 @@ class OAuthService extends Service
         // register 'resource server' authentication
         $resourceServerAuthentication = new BasicAuthentication(
             function ($resourceServerId) {
-                $resourceServer = $server->getResourceServerStorage()->getResourceServer($resourceServerId);
+                $resourceServer = $this->server->getResourceServerStorage()->getResourceServer($resourceServerId);
                 if (false === $resourceServer) {
                     return false;
                 }
