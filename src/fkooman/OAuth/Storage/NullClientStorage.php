@@ -7,7 +7,7 @@ use fkooman\OAuth\Client;
 
 class NullClientStorage implements ClientStorageInterface
 {
-    public function getClient($clientId, $responseType, $redirectUri, $scope)
+    public function getClient($clientId, $responseType, $redirectUri = null, $scope = null)
     {
         // only when there is actual client registration the redirectUri and
         // scope are optional as they can be retrieve from the registration

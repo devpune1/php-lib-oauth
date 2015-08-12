@@ -21,7 +21,7 @@ use fkooman\OAuth\Client;
 
 class TestClient implements ClientStorageInterface
 {
-    public function getClient($clientId, $responseType, $redirectUri, $scope)
+    public function getClient($clientId, $responseType, $redirectUri = null, $scope = null)
     {
         return new Client($clientId, $responseType, $redirectUri, $scope, null);
     }

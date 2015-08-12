@@ -29,15 +29,6 @@ class JsonResourceServerStorageTest extends PHPUnit_Framework_TestCase
         $this->assertSame('post', $resourceServer->getScope());
     }
 
-    public function testGetNoScope()
-    {
-        $resourceServerStorage = new JsonResourceServerStorage(__DIR__.'/data/resource_servers.json');
-        $resourceServer = $resourceServerStorage->getResourceServer('foo');
-        $this->assertSame('foo', $resourceServer->getResourceServerId());
-        $this->assertSame('$2y$10$pSkWUeL9cFX58JvYbNThW.40kMf5UF2JtBOTdFLg3Gttm9o21WKY.', $resourceServer->getSecret());
-        $this->assertSame('read', $resourceServer->getScope());
-    }
-
     public function testGetNonExisting()
     {
         $resourceServerStorage = new JsonResourceServerStorage(__DIR__.'/data/resource_servers.json');
