@@ -44,7 +44,7 @@ class OAuthService extends Service
                 'realm' => 'OAuth AS',
             )
         );
-        $authenticationPlugin->register($resourceServerAuthentication, 'client');
+        $authenticationPlugin->register($clientAuthentication, 'client');
 
         // register 'resource server' authentication
         $resourceServerAuthentication = new BasicAuthentication(
