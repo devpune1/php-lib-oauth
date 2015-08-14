@@ -38,9 +38,12 @@ class JsonClientStorage implements ClientStorageInterface
             // are allowed?
         }
 
-        $clientData = $data[$clientId];
-        $clientData['client_id'] = $clientId;
-
-        return Client::fromArray($clientData);
+        return new Client(
+            $clientId,
+            $data[$clientId]['response_type'],
+            $data[$clientId]['redirect_uri'],
+            $data[$clientId]['scope'],
+            $data[$clientId]['secret']
+        );
     }
 }

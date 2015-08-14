@@ -28,17 +28,6 @@ class AuthorizationCode
         $this->scope = $scope;
     }
 
-    public static function fromArray(array $authorizationCode)
-    {
-        return new self(
-            $authorizationCode['client_id'],
-            $authorizationCode['user_id'],
-            $authorizationCode['issued_at'],
-            $authorizationCode['redirect_uri'],
-            $authorizationCode['scope']
-        );
-    }
-
     public function getClientId()
     {
         return $this->clientId;

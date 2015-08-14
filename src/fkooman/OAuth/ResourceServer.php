@@ -2,8 +2,6 @@
 
 namespace fkooman\OAuth;
 
-use InvalidArgumentException;
-
 class ResourceServer
 {
     /** @var string */
@@ -20,24 +18,6 @@ class ResourceServer
         $this->resourceServerId = $resourceServerId;
         $this->scope = $scope;
         $this->secret = $secret;
-    }
-
-    public static function fromArray(array $resourceServer)
-    {
-        $requiredFields = array('resource_server_id', 'scope', 'secret');
-        foreach ($requiredFields as $f) {
-            if (!array_key_exists($f, $resourceServer)) {
-                throw new InvalidArgumentException(
-                    sprintf('missing "%s"', $f)
-                );
-            }
-        }
-
-        return new self(
-            $resourceServer['resource_server_id'],
-            $resourceServer['scope'],
-            $resourceServer['secret']
-        );
     }
 
     public function getResourceServerId()

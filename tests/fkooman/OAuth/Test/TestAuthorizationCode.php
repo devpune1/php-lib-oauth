@@ -40,10 +40,16 @@ class TestAuthorizationCode implements AuthorizationCodeStorageInterface
 
     public function retrieveAuthorizationCode($authorizationCode)
     {
-        return AuthorizationCode::fromArray(
-            Json::decode(
-                Base64Url::decode($authorizationCode)
-            )
+        $data = Json::decode(
+            Base64Url::decode($authorizationCode)
+        );
+
+        return new AuthorizationCode(
+            $data['client_id'],
+            $data['user_id'],
+            $data['issued_at'],
+            $data['redirect_uri'],
+            $data['scope']
         );
     }
 

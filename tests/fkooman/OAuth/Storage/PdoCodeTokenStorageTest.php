@@ -45,14 +45,12 @@ class PdoCodeTokenStorageTest extends PHPUnit_Framework_TestCase
 
     public function testInsertCode()
     {
-        $authorizationCode = AuthorizationCode::fromArray(
-            array(
-                'client_id' => 'foo',
-                'user_id' => 'bar',
-                'issued_at' => 123456789,
-                'redirect_uri' => 'https://example.org/cb',
-                'scope' => 'foo bar',
-            )
+        $authorizationCode = new AuthorizationCode(
+            'foo',
+            'bar',
+            123456789,
+            'https://example.org/cb',
+            'foo bar'
         );
 
         $this->assertSame('112233ff', $this->storage->storeAuthorizationCode($authorizationCode));
@@ -60,14 +58,12 @@ class PdoCodeTokenStorageTest extends PHPUnit_Framework_TestCase
 
     public function testGetCode()
     {
-        $authorizationCode = AuthorizationCode::fromArray(
-            array(
-                'client_id' => 'foo',
-                'user_id' => 'bar',
-                'issued_at' => 123456789,
-                'redirect_uri' => 'https://example.org/cb',
-                'scope' => 'foo bar',
-            )
+        $authorizationCode = new AuthorizationCode(
+            'foo',
+            'bar',
+            123456789,
+            'https://example.org/cb',
+            'foo bar'
         );
 
         $this->assertSame('112233ff', $this->storage->storeAuthorizationCode($authorizationCode));
@@ -87,13 +83,11 @@ class PdoCodeTokenStorageTest extends PHPUnit_Framework_TestCase
 
     public function testInsertToken()
     {
-        $accessToken = AccessToken::fromArray(
-            array(
-                'client_id' => 'foo',
-                'user_id' => 'bar',
-                'issued_at' => 123456789,
-                'scope' => 'foo bar',
-            )
+        $accessToken = new AccessToken(
+            'foo',
+            'bar',
+            123456789,
+            'foo bar'
         );
 
         $this->assertSame('112233ff', $this->storage->storeAccessToken($accessToken));
@@ -101,13 +95,11 @@ class PdoCodeTokenStorageTest extends PHPUnit_Framework_TestCase
 
     public function testGetToken()
     {
-        $accessToken = AccessToken::fromArray(
-            array(
-                'client_id' => 'foo',
-                'user_id' => 'bar',
-                'issued_at' => 123456789,
-                'scope' => 'foo bar',
-            )
+        $accessToken = new AccessToken(
+            'foo',
+            'bar',
+            123456789,
+            'foo bar'
         );
 
         $this->assertSame('112233ff', $this->storage->storeAccessToken($accessToken));

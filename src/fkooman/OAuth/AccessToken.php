@@ -24,16 +24,6 @@ class AccessToken
         $this->scope = $scope;
     }
 
-    public static function fromArray(array $accessToken)
-    {
-        return new self(
-            $accessToken['client_id'],
-            $accessToken['user_id'],
-            $accessToken['issued_at'],
-            $accessToken['scope']
-        );
-    }
-
     public function getClientId()
     {
         return $this->clientId;

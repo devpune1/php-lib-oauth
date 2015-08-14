@@ -28,17 +28,6 @@ class Client
         $this->secret = $secret;
     }
 
-    public static function fromArray(array $client)
-    {
-        return new self(
-            $client['client_id'],
-            $client['response_type'],
-            $client['redirect_uri'],
-            $client['scope'],
-            $client['secret']
-        );
-    }
-
     public function getClientId()
     {
         return $this->clientId;

@@ -22,9 +22,11 @@ class JsonResourceServerStorage implements ResourceServerStorageInterface
         if (!array_key_exists($resourceServerId, $data)) {
             return false;
         }
-        $resourceServerData = $data[$resourceServerId];
-        $resourceServerData['resource_server_id'] = $resourceServerId;
 
-        return ResourceServer::fromArray($resourceServerData);
+        return new ResourceServer(
+            $resourceServerId,
+            $data[$resourceServerId]['scope'],
+            $data[$resourceServerId]['secret']
+        );
     }
 }

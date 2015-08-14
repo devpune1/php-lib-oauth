@@ -66,7 +66,13 @@ class PdoCodeTokenStorage implements AuthorizationCodeStorageInterface, AccessTo
             return false;
         }
 
-        return AuthorizationCode::fromArray($result);
+        return new AuthorizationCode(
+            $result['client_id'],
+            $result['user_id'],
+            $result['issued_at'],
+            $result['redirect_uri'],
+            $result['scope']
+        );
     }
 
     public function isFreshAuthorizationCode($authorizationCode)
@@ -132,7 +138,12 @@ class PdoCodeTokenStorage implements AuthorizationCodeStorageInterface, AccessTo
             return false;
         }
 
-        return AccessToken::fromArray($result);
+        return new AccessToken(
+            $result['client_id'],
+            $result['user_id'],
+            $result['issued_at'],
+            $result['scope']
+        );
     }
 
     public static function createTableQueries($prefix)

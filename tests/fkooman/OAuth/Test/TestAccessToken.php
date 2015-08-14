@@ -39,10 +39,15 @@ class TestAccessToken implements AccessTokenStorageInterface
 
     public function retrieveAccessToken($accessToken)
     {
-        return AccessToken::fromArray(
-            Json::decode(
-                Base64Url::decode($accessToken)
-            )
+        $data = Json::decode(
+            Base64Url::decode($accessToken)
+        );
+
+        return new AccessToken(
+            $data['client_id'],
+            $data['user_id'],
+            $data['issued_at'],
+            $data['scope']
         );
     }
 }
