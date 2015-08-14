@@ -36,10 +36,16 @@ class OAuthServerTest extends PHPUnit_Framework_TestCase
     /** @var \fkooman\Rest\Plugin\Authentication\UserInfoInterface */
     private $userInfo;
 
+    /** @var \fkooman\Rest\Plugin\Authentication\UserInfoInterface */
+    private $clientUserInfo;
+
     public function setUp()
     {
         $this->userInfo = $this->getMockBuilder('fkooman\Rest\Plugin\Authentication\UserInfoInterface')->getMock();
         $this->userInfo->method('getUserId')->willReturn('admin');
+
+        $this->clientUserInfo = $this->getMockBuilder('fkooman\Rest\Plugin\Authentication\UserInfoInterface')->getMock();
+        $this->clientUserInfo->method('getUserId')->willReturn('test-client');
 
         $testTemplateManager = new TestTemplateManager();
         $testAuthorizationCode = new TestAuthorizationCode();
@@ -70,7 +76,7 @@ class OAuthServerTest extends PHPUnit_Framework_TestCase
     public function testGetAuthorize()
     {
         $query = array(
-            'client_id' => 'https://localhost',
+            'client_id' => 'test-client',
             'response_type' => 'code',
             'redirect_uri' => 'https://localhost/cb',
             'state' => '12345',
@@ -82,10 +88,10 @@ class OAuthServerTest extends PHPUnit_Framework_TestCase
             array(
                 'getAuthorize' => array(
                     'user_id' => 'admin',
-                    'client_id' => 'https://localhost',
+                    'client_id' => 'test-client',
                     'redirect_uri' => 'https://localhost/cb',
                     'scope' => 'post',
-                    'request_url' => 'https://oauth.example/authorize?client_id=https%3A%2F%2Flocalhost&response_type=code&redirect_uri=https%3A%2F%2Flocalhost%2Fcb&state=12345&scope=post',
+                    'request_url' => 'https://oauth.example/authorize?client_id=test-client&response_type=code&redirect_uri=https%3A%2F%2Flocalhost%2Fcb&state=12345&scope=post',
                 ),
             ),
             $this->oauthServer->getAuthorize($request, $this->userInfo)
@@ -95,7 +101,7 @@ class OAuthServerTest extends PHPUnit_Framework_TestCase
     public function testPostAuthorize()
     {
         $query = array(
-            'client_id' => 'https://localhost',
+            'client_id' => 'test-client',
             'redirect_uri' => 'https://localhost/cb',
             'state' => '12345',
             'response_type' => 'code',
@@ -107,7 +113,7 @@ class OAuthServerTest extends PHPUnit_Framework_TestCase
             array(
                 'HTTP/1.1 302 Found',
                 'Content-Type: text/html;charset=UTF-8',
-                'Location: https://localhost/cb?code=eyJjbGllbnRfaWQiOiJodHRwczpcL1wvbG9jYWxob3N0IiwidXNlcl9pZCI6ImFkbWluIiwiaXNzdWVkX2F0IjoxMjM0NTY3ODkwLCJyZWRpcmVjdF91cmkiOiJodHRwczpcL1wvbG9jYWxob3N0XC9jYiIsInNjb3BlIjoicG9zdCJ9&state=12345',
+                'Location: https://localhost/cb?code=eyJjbGllbnRfaWQiOiJ0ZXN0LWNsaWVudCIsInVzZXJfaWQiOiJhZG1pbiIsImlzc3VlZF9hdCI6MTIzNDU2Nzg5MCwicmVkaXJlY3RfdXJpIjoiaHR0cHM6XC9cL2xvY2FsaG9zdFwvY2IiLCJzY29wZSI6InBvc3QifQ&state=12345',
                 '',
                 '',
             ),
@@ -118,7 +124,7 @@ class OAuthServerTest extends PHPUnit_Framework_TestCase
     public function testPostAuthorizeNoApproval()
     {
         $query = array(
-            'client_id' => 'https://localhost',
+            'client_id' => 'test-client',
             'redirect_uri' => 'https://localhost/cb',
             'state' => '12345',
             'response_type' => 'code',
@@ -152,11 +158,11 @@ class OAuthServerTest extends PHPUnit_Framework_TestCase
                 'REQUEST_METHOD' => 'POST',
             ),
             array(
-                'code' => 'eyJjbGllbnRfaWQiOiJodHRwczpcL1wvbG9jYWxob3N0IiwidXNlcl9pZCI6ImFkbWluIiwiaXNzdWVkX2F0IjoxMjM0NTY3ODkwLCJyZWRpcmVjdF91cmkiOiJodHRwczpcL1wvbG9jYWxob3N0XC9jYiIsInNjb3BlIjoicG9zdCJ9',
+                'code' => 'eyJjbGllbnRfaWQiOiJ0ZXN0LWNsaWVudCIsInVzZXJfaWQiOiJhZG1pbiIsImlzc3VlZF9hdCI6MTIzNDU2Nzg5MCwicmVkaXJlY3RfdXJpIjoiaHR0cHM6XC9cL2xvY2FsaG9zdFwvY2IiLCJzY29wZSI6InBvc3QifQ',
                 'scope' => 'post',
                 'redirect_uri' => 'https://localhost/cb',
                 'grant_type' => 'authorization_code',
-                'client_id' => 'https://localhost',
+                'client_id' => 'test-client',
             )
         );
 
@@ -167,10 +173,39 @@ class OAuthServerTest extends PHPUnit_Framework_TestCase
                 'Cache-Control: no-store',
                 'Pragma: no-cache',
                 '',
-                '{"access_token":"eyJjbGllbnRfaWQiOiJodHRwczpcL1wvbG9jYWxob3N0IiwidXNlcl9pZCI6ImFkbWluIiwiaXNzdWVkX2F0IjoxMjM0NTY3ODkwLCJzY29wZSI6InBvc3QifQ","scope":"post"}',
+                '{"access_token":"eyJjbGllbnRfaWQiOiJ0ZXN0LWNsaWVudCIsInVzZXJfaWQiOiJhZG1pbiIsImlzc3VlZF9hdCI6MTIzNDU2Nzg5MCwic2NvcGUiOiJwb3N0In0","scope":"post"}',
             ),
-            $this->oauthServer->postToken($request)->toArray()
+            $this->oauthServer->postToken($request, $this->clientUserInfo)->toArray()
         );
+    }
+
+    /**
+     * @expectedException fkooman\Http\Exception\UnauthorizedException
+     * @expectedExceptionMessage not_authenticated
+     */
+    public function testPostTokenNoAuthentication()
+    {
+        // this should only work with clients that have 'secret' set to NULL
+        $request = new Request(
+            array(
+                'HTTPS' => 'on',
+                'SERVER_NAME' => 'oauth.example',
+                'SERVER_PORT' => '443',
+                'REQUEST_URI' => '/token',
+                'SCRIPT_NAME' => '/index.php',
+                'PATH_INFO' => '/token',
+                'QUERY_STRING' => '',
+                'REQUEST_METHOD' => 'POST',
+            ),
+            array(
+                'code' => 'eyJjbGllbnRfaWQiOiJ0ZXN0LWNsaWVudCIsInVzZXJfaWQiOiJhZG1pbiIsImlzc3VlZF9hdCI6MTIzNDU2Nzg5MCwicmVkaXJlY3RfdXJpIjoiaHR0cHM6XC9cL2xvY2FsaG9zdFwvY2IiLCJzY29wZSI6InBvc3QifQ',
+                'scope' => 'post',
+                'redirect_uri' => 'https://localhost/cb',
+                'grant_type' => 'authorization_code',
+                'client_id' => 'test-client',
+            )
+        );
+        $this->oauthServer->postToken($request, null);
     }
 
     /**
@@ -195,10 +230,10 @@ class OAuthServerTest extends PHPUnit_Framework_TestCase
                 'scope' => 'post',
                 'redirect_uri' => 'https://localhost/cb',
                 'grant_type' => 'authorization_code',
-                'client_id' => 'https://localhost',
+                'client_id' => 'test-client',
             )
         );
-        $this->oauthServer->postToken($request);
+        $this->oauthServer->postToken($request, $this->clientUserInfo);
     }
 
     public function testPostIntrospect()
@@ -215,7 +250,7 @@ class OAuthServerTest extends PHPUnit_Framework_TestCase
                 'REQUEST_METHOD' => 'POST',
             ),
             array(
-                'token' => 'eyJjbGllbnRfaWQiOiJodHRwczpcL1wvbG9jYWxob3N0IiwidXNlcl9pZCI6ImFkbWluIiwiaXNzdWVkX2F0IjoxMjM0NTY3ODkwLCJyZWRpcmVjdF91cmkiOiJodHRwczpcL1wvbG9jYWxob3N0XC9jYiIsInNjb3BlIjoicG9zdCJ9',
+                'token' => 'eyJjbGllbnRfaWQiOiJ0ZXN0LWNsaWVudCIsInVzZXJfaWQiOiJhZG1pbiIsImlzc3VlZF9hdCI6MTIzNDU2Nzg5MCwic2NvcGUiOiJwb3N0In0',
             )
         );
 
@@ -224,7 +259,7 @@ class OAuthServerTest extends PHPUnit_Framework_TestCase
                 'HTTP/1.1 200 OK',
                 'Content-Type: application/json',
                 '',
-                '{"active":true,"client_id":"https:\/\/localhost","scope":"post","token_type":"bearer","iat":1234567890,"sub":"admin"}',
+                '{"active":true,"client_id":"test-client","scope":"post","token_type":"bearer","iat":1234567890,"sub":"admin"}',
             ),
             $this->oauthServer->postIntrospect($request, $this->userInfo)->toArray()
         );

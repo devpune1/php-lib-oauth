@@ -9,6 +9,7 @@ use fkooman\Tpl\TemplateManagerInterface;
 use fkooman\Http\JsonResponse;
 use fkooman\Http\Exception\BadRequestException;
 use fkooman\IO\IO;
+use fkooman\Http\Exception\UnauthorizedException;
 
 class OAuthServer
 {
@@ -87,6 +88,10 @@ class OAuthServer
             throw new BadRequestException('client does not exist');
         }
 
+        // XXX verify response_type
+        // XXX verify redirect_uri
+        // XXX verify scope
+
         // show the approval dialog
         return $this->templateManager->render(
             'getAuthorize',
@@ -114,6 +119,9 @@ class OAuthServer
         if (false === $clientInfo) {
             throw new BadRequestException('client does not exist');
         }
+        // XXX verify response_type
+        // XXX verify redirect_uri
+        // XXX verify scope
 
         if ('yes' === $postAuthorizeRequest['approval']) {
             // approved
@@ -159,9 +167,39 @@ class OAuthServer
         );
     }
 
-    public function postToken(Request $request)
+    public function postToken(Request $request, UserInfoInterface $clientUserInfo = null)
     {
+        // FIXME: deal with not authenticated attempts! check if the client is
+        // 'public/anonymous' or not, we have to deny hard here! check client_id
+        // post parameter, check userInfo->getUserId to match it with client_id
+        // etc.
+
         $tokenRequest = RequestValidation::validateTokenRequest($request);
+
+        $client = $this->clientStorage->getClient($tokenRequest['client_id']);
+        if (null === $clientUserInfo) {
+            // unauthenticated client
+            if (null !== $client->getSecret()) {
+                // if this is not null, authentication was actually required, but there was no attempt
+                $e = new UnauthorizedException('not_authenticated', 'client authentication required for this client');
+                $e->addScheme(
+                    'Basic', 
+                    array(
+                        'realm' => 'OAuth AS'
+                    )
+                );
+                throw $e;
+            }
+        }
+
+        if (null !== $clientUserInfo) {
+            // if authenticated, client_id must match the authenticated user
+            if ($clientUserInfo->getUserId() !== $tokenRequest['client_id']) {
+                throw new BadRequestException('client_id does not match authenticated user');
+            }
+        }
+
+        // check code was not used before
         if (!$this->authorizationCodeStorage->isFreshAuthorizationCode($tokenRequest['code'])) {
             throw new BadRequestException('authorization code can not be replayed');
         }
@@ -175,11 +213,17 @@ class OAuthServer
         if ($authorizationCode->getClientId() !== $tokenRequest['client_id']) {
             throw new BadRequestException('client_id does not match expected value');
         }
-        if ($authorizationCode->getRedirectUri() !== $tokenRequest['redirect_uri']) {
-            throw new BadRequestException('redirect_uri does not match expected value');
+
+        if (null !== $authorizationCode->getRedirectUri()) {
+            if ($authorizationCode->getRedirectUri() !== $tokenRequest['redirect_uri']) {
+                throw new BadRequestException('redirect_uri does not match expected value');
+            }
         }
-        if ($authorizationCode->getScope() !== $tokenRequest['scope']) {
-            throw new BadRequestException('scope does not match expected value');
+
+        if (null !== $authorizationCode->getScope()) {
+            if ($authorizationCode->getScope() !== $tokenRequest['scope']) {
+                throw new BadRequestException('scope does not match expected value');
+            }
         }
 
         // FIXME: grant_type must also match I think, but we do not have any

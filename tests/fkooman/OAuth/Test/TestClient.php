@@ -21,8 +21,31 @@ use fkooman\OAuth\Client;
 
 class TestClient implements ClientStorageInterface
 {
-    public function getClient($clientId, $responseType, $redirectUri = null, $scope = null)
+    public function getClient($clientId, $responseType = null, $redirectUri = null, $scope = null)
     {
-        return new Client($clientId, $responseType, $redirectUri, $scope, null);
+        // XXX do something if the redirect_uri and scope are not matching...
+        if ('test-client' === $clientId) {
+            return new Client(
+                $clientId,
+                'code',
+                'https://localhost/cb',
+                'post',
+                '$2y$10$l.ebSWe5xsSBKaaUqisVFetaIiGfjU.tnYjjL/izt95Rr5LNSYH4q'
+            );
+        }
+
+        // XXX do something if the redirect_uri and scope are not matching...
+        if ('test-anonymous-client' === $clientId && 'code' === $responseType) {
+            return new Client(
+                $clientId,
+                'code',
+                'https://localhost/cb',
+                'post',
+                null   // no secret set
+            );
+        }
+
+        // not registered
+        return false;
     }
 }
