@@ -2,6 +2,8 @@
 
 namespace fkooman\OAuth;
 
+use InvalidArgumentException;
+
 class Client
 {
     /** @var string */
@@ -30,7 +32,7 @@ class Client
 
     public function setClientId($clientId)
     {
-        if(false === InputValidation::clientId($clientId)) {
+        if (false === InputValidation::clientId($clientId)) {
             throw new InvalidArgumentException('invalid client_id');
         }
         $this->clientId = $clientId;
@@ -43,7 +45,7 @@ class Client
 
     public function setResponseType($responseType)
     {
-        if(false === InputValidation::responseType($responseType)) {
+        if (false === InputValidation::responseType($responseType)) {
             throw new InvalidArgumentException('invalid response_type');
         }
         $this->responseType = $responseType;
@@ -56,7 +58,7 @@ class Client
 
     public function setRedirectUri($redirectUri)
     {
-        if(false === InputValidation::redirectUri($redirectUri)) {
+        if (false === InputValidation::redirectUri($redirectUri)) {
             throw new InvalidArgumentException('invalid redirect_uri');
         }
         $this->redirectUri = $redirectUri;
@@ -69,7 +71,7 @@ class Client
 
     public function setScope($scope)
     {
-        if(false === InputValidation::scope($scope)) {
+        if (false === InputValidation::scope($scope)) {
             throw new InvalidArgumentException('invalid scope');
         }
         $this->scope = $scope;
@@ -82,7 +84,7 @@ class Client
 
     public function setSecret($secret)
     {
-#        // XXX validate secret as well
+        #        // XXX validate secret as well
 #        if(false === InputValidation::secret($secret)) {
 #            throw new InvalidArgumentException('invalid secret');
 #        }
