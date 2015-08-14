@@ -185,8 +185,6 @@ class OAuthServer
         // FIXME: grant_type must also match I think, but we do not have any
         // mapping logic from response_type to grant_type yet...
 
-        // FIXME: keep log of used codes (must not allowed to be replayed)
-
         // create an access token
         $accessToken = $this->accessTokenStorage->storeAccessToken(
             new AccessToken(

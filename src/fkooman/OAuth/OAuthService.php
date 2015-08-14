@@ -30,21 +30,21 @@ class OAuthService extends Service
         // register 'user' authentication
         $authenticationPlugin->register($userAuthenticationPlugin, 'user');
 
-#        // register 'client' authentication
-#        $clientAuthentication = new BasicAuthentication(
-#            function ($clientId) {
-#                $client = $this->server->getClientStorage()->getClient($clientId);
-#                if (false === $client) {
-#                    return false;
-#                }
+        // register 'client' authentication
+        $clientAuthentication = new BasicAuthentication(
+            function ($clientId) {
+                $client = $this->server->getClientStorage()->getClient($clientId);
+                if (false === $client) {
+                    return false;
+                }
 
-#                return $client->getSecret();
-#            },
-#            array(
-#                'realm' => 'OAuth AS',
-#            )
-#        );
-#        $authenticationPlugin->register($resourceServerAuthentication, 'client');
+                return $client->getSecret();
+            },
+            array(
+                'realm' => 'OAuth AS',
+            )
+        );
+        $authenticationPlugin->register($resourceServerAuthentication, 'client');
 
         // register 'resource server' authentication
         $resourceServerAuthentication = new BasicAuthentication(
@@ -99,8 +99,7 @@ class OAuthService extends Service
             },
             array(
                 'fkooman\Rest\Plugin\Authentication\AuthenticationPlugin' => array(
-                    //'activate' => array('client'),
-                    'enabled' => false,
+                    'activate' => array('client')
                 ),
             )
         );
