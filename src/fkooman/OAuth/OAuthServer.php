@@ -210,9 +210,14 @@ class OAuthServer
                 'active' => false,
             );
         } else {
-            // FIXME: use better scope matching...
             $resourceServerInfo = $this->resourceServerStorage->getResourceServer($userInfo->getUserId());
-            if ($resourceServerInfo->getScope() !== $accessToken->getScope()) {
+            $resourceServerScope = new Scope($resourceServerInfo->getScope());
+            $accessTokenScope = new Scope($accessToken->getScope());
+            // the scopes from the access token needs to be supported by the
+            // resource server, otherwise the token is not valid (for this 
+            // resource server, i.e. audience mismatch)
+
+            if (!$resourceServerScope->hasScope($accessTokenScope)) {
                 $body = array(
                     'active' => false,
                 );
