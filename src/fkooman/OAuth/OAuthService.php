@@ -33,7 +33,11 @@ class OAuthService extends Service
         // register 'client' authentication
         $clientAuthentication = new BasicAuthentication(
             function ($clientId) {
-                $client = $this->server->getClientStorage()->getClient($clientId);
+                // XXX: we currently hardcode the code type, this is not a 
+                // great solution, but it *will* always work as the token type
+                // will never use token endpoint, and also refresh tokens will
+                // be fine...
+                $client = $this->server->getClientStorage()->getClient($clientId, 'code');
                 if (false === $client) {
                     return false;
                 }
@@ -99,7 +103,7 @@ class OAuthService extends Service
             },
             array(
                 'fkooman\Rest\Plugin\Authentication\AuthenticationPlugin' => array(
-                    'activate' => array('client')
+                    'activate' => array('client'),
                 ),
             )
         );
