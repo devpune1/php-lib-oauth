@@ -102,8 +102,18 @@ class OAuthServer
 
     public function postAuthorize(Request $request, UserInfoInterface $userInfo)
     {
-        // FIXME: referrer url MUST be request URL?
+        // FIXME: referrer url MUST be exact request URL?
         $postAuthorizeRequest = RequestValidation::validatePostAuthorizeRequest($request);
+
+        $clientInfo = $this->clientStorage->getClient(
+            $postAuthorizeRequest['client_id'],
+            $postAuthorizeRequest['response_type'],
+            $postAuthorizeRequest['redirect_uri'],
+            $postAuthorizeRequest['scope']
+        );
+        if (false === $clientInfo) {
+            throw new BadRequestException('client does not exist');
+        }
 
         if ('yes' === $postAuthorizeRequest['approval']) {
             // approved
