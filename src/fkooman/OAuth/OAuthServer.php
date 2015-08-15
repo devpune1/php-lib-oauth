@@ -78,28 +78,27 @@ class OAuthServer
     {
         $authorizeRequest = RequestValidation::validateAuthorizeRequest($request);
 
-        $clientInfo = $this->clientStorage->getClient(
+        $client = $this->clientStorage->getClient(
             $authorizeRequest['client_id'],
             $authorizeRequest['response_type'],
             $authorizeRequest['redirect_uri'],
             $authorizeRequest['scope']
         );
-        if (false === $clientInfo) {
+        if (false === $client) {
             throw new BadRequestException('client does not exist');
         }
 
-        // XXX verify response_type
-        // XXX verify redirect_uri
-        // XXX verify scope
+        // verify authorize request with client information
+        $this->validateAuthorizeRequestWithClient($client, $authorizeRequest);
 
         // show the approval dialog
         return $this->templateManager->render(
             'getAuthorize',
             array(
                 'user_id' => $userInfo->getUserId(),
-                'client_id' => $clientInfo->getClientId(),
-                'redirect_uri' => $clientInfo->getRedirectUri(),
-                'scope' => $clientInfo->getScope(),
+                'client_id' => $client->getClientId(),
+                'redirect_uri' => $client->getRedirectUri(),
+                'scope' => $client->getScope(),
                 'request_url' => $request->getUrl()->toString(),
             )
         );
@@ -110,18 +109,18 @@ class OAuthServer
         // FIXME: referrer url MUST be exact request URL?
         $postAuthorizeRequest = RequestValidation::validatePostAuthorizeRequest($request);
 
-        $clientInfo = $this->clientStorage->getClient(
+        $client = $this->clientStorage->getClient(
             $postAuthorizeRequest['client_id'],
             $postAuthorizeRequest['response_type'],
             $postAuthorizeRequest['redirect_uri'],
             $postAuthorizeRequest['scope']
         );
-        if (false === $clientInfo) {
+        if (false === $client) {
             throw new BadRequestException('client does not exist');
         }
-        // XXX verify response_type
-        // XXX verify redirect_uri
-        // XXX verify scope
+
+        // verify authorize request with client information
+        $this->validateAuthorizeRequestWithClient($client, $postAuthorizeRequest);
 
         if ('yes' === $postAuthorizeRequest['approval']) {
             // approved
@@ -183,9 +182,9 @@ class OAuthServer
                 // if this is not null, authentication was actually required, but there was no attempt
                 $e = new UnauthorizedException('not_authenticated', 'client authentication required for this client');
                 $e->addScheme(
-                    'Basic', 
+                    'Basic',
                     array(
-                        'realm' => 'OAuth AS'
+                        'realm' => 'OAuth AS',
                     )
                 );
                 throw $e;
@@ -289,5 +288,26 @@ class OAuthServer
         $response->setBody($body);
 
         return $response;
+    }
+
+    private function validateAuthorizeRequestWithClient(Client $client, array $authorizeRequest)
+    {
+        if ($client->getResponseType() !== $authorizeRequest['response_type']) {
+            throw new BadRequestException('response_type not supported by client');
+        }
+
+        if (null !== $authorizeRequest['redirect_uri']) {
+            if ($client->getRedirectUri() !== $authorizeRequest['redirect_uri']) {
+                throw new BadRequestException('redirect_uri not supported by client');
+            }
+        }
+
+        if (null !== $authorizeRequest['scope']) {
+            $requestScope = new Scope($authorizeRequest['scope']);
+            $clientScope = new Scope($client->getScope());
+            if (!$clientScope->hasScope($requestScope)) {
+                throw new BadRequestException('scope not supported by client');
+            }
+        }
     }
 }
