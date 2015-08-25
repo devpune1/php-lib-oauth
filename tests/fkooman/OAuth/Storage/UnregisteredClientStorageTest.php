@@ -18,11 +18,11 @@ namespace fkooman\OAuth\Storage;
 
 use PHPUnit_Framework_TestCase;
 
-class NullClientStorageTest extends PHPUnit_Framework_TestCase
+class UnregisteredClientStorageTest extends PHPUnit_Framework_TestCase
 {
     public function testClient()
     {
-        $clientStorage = new NullClientStorage();
+        $clientStorage = new UnregisteredClientStorage();
         $client = $clientStorage->getClient('id', 'code', 'https://example.org/cb', 'foo bar');
         $this->assertSame('id', $client->getClientId());
         $this->assertSame('code', $client->getResponseType());
@@ -32,7 +32,7 @@ class NullClientStorageTest extends PHPUnit_Framework_TestCase
 
     public function testMissingRedirectUriClient()
     {
-        $clientStorage = new NullClientStorage();
+        $clientStorage = new UnregisteredClientStorage();
         $this->assertFalse($clientStorage->getClient('id', 'code', null, 'foo bar'));
     }
 }

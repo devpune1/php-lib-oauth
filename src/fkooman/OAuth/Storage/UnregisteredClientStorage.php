@@ -5,7 +5,7 @@ namespace fkooman\OAuth\Storage;
 use fkooman\OAuth\ClientStorageInterface;
 use fkooman\OAuth\Client;
 
-class NullClientStorage implements ClientStorageInterface
+class UnregisteredClientStorage implements ClientStorageInterface
 {
     public function getClient($clientId, $responseType = null, $redirectUri = null, $scope = null)
     {
