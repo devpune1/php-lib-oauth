@@ -45,16 +45,6 @@ class OAuthServer
     }
 
     /**
-     * Get the template manager.
-     *
-     * @return TemplateInterface the template manager instance
-     */
-    public function getTemplateManager()
-    {
-        return $this->templateManager;
-    }
-
-    /**
      * Get the resource server storage.
      *
      * @return ResourceServerStorageInterface the resource server storage
