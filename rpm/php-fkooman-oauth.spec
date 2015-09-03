@@ -6,7 +6,7 @@
 
 Name:       php-%{composer_vendor}-%{composer_project}
 Version:    1.0.0
-Release:    2%{?dist}
+Release:    1%{?dist}
 Summary:    OAuth 2.0 Authorization Server library
 
 Group:      System Environment/Libraries
@@ -50,6 +50,8 @@ BuildRequires:  php-composer(fkooman/tpl) >= 2.0.0
 BuildRequires:  php-composer(fkooman/tpl) < 3.0.0
 BuildRequires:  php-composer(fkooman/rest-plugin-authentication-basic) >= 1.0.0
 BuildRequires:  php-composer(fkooman/rest-plugin-authentication-basic) < 2.0.0
+BuildRequires:  php-composer(fkooman/base64) >= 1.0.0
+BuildRequires:  php-composer(fkooman/base64) < 2.0.0
 
 %description
 OAuth 2.0 Authorization Server library.
@@ -67,6 +69,7 @@ cp -pr src/* ${RPM_BUILD_ROOT}%{_datadir}/php
 %check
 %{_bindir}/phpab --output tests/bootstrap.php tests
 echo 'require "%{buildroot}%{_datadir}/php/%{composer_vendor}/OAuth/autoload.php";' >> tests/bootstrap.php
+echo 'require "%{_datadir}/php/fkooman/Base64/autoload.php";' >> tests/bootstrap.php
 %{_bindir}/phpunit \
     --bootstrap tests/bootstrap.php
 
@@ -78,9 +81,5 @@ echo 'require "%{buildroot}%{_datadir}/php/%{composer_vendor}/OAuth/autoload.php
 %license COPYING
 
 %changelog
-* Thu Sep 03 2015 François Kooman <fkooman@tuxed.net> - 1.0.0-2
-- add autoloader
-- run tests during build
-
-* Thu Jul 23 2015 François Kooman <fkooman@tuxed.net> - 1.0.0-1
-- update to 1.0.0
+* Thu Sep 03 2015 François Kooman <fkooman@tuxed.net> - 1.0.0-1
+- initial package
