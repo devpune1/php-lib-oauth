@@ -42,26 +42,26 @@ class OAuthServerTest extends PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->userInfo = $this->getMockBuilder('fkooman\Rest\Plugin\Authentication\UserInfoInterface')->getMock();
-        $this->userInfo->method('getUserId')->willReturn('admin');
+        $this->userInfo->expects($this->any())->method('getUserId')->will($this->returnValue('admin'));
 
         $this->clientUserInfo = $this->getMockBuilder('fkooman\Rest\Plugin\Authentication\UserInfoInterface')->getMock();
-        $this->clientUserInfo->method('getUserId')->willReturn('test-client');
+        $this->clientUserInfo->expects($this->any())->method('getUserId')->will($this->returnValue('test-client'));
 
         $testTemplateManager = new TestTemplateManager();
         $testAuthorizationCode = new TestAuthorizationCode();
         $testAccessToken = new TestAccessToken();
 
         $resourceServer = $this->getMockBuilder('fkooman\OAuth\ResourceServerStorageInterface')->getMock();
-        $resourceServer->method('getResourceServer')->willReturn(
+        $resourceServer->expects($this->any())->method('getResourceServer')->will($this->returnValue(
             new ResourceServer(
                 'r_id',
                 'post',
                 'SECRET'
             )
-        );
+        ));
 
         $io = $this->getMockBuilder('fkooman\IO\IO')->getMock();
-        $io->method('getTime')->willReturn(1234567890);
+        $io->expects($this->any())->method('getTime')->will($this->returnValue(1234567890));
 
         $this->oauthServer = new OAuthServer(
             $testTemplateManager,
