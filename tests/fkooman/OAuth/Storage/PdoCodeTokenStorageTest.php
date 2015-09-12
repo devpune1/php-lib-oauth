@@ -29,7 +29,7 @@ class PdoCodeTokenStorageTest extends PHPUnit_Framework_TestCase
     public function setUp()
     {
         $io = $this->getMockBuilder('fkooman\IO\IO')->getMock();
-        $io->method('getRandom')->willReturn('112233ff');
+        $io->expects($this->any())->method('getRandom')->will($this->returnValue('112233ff'));
 
         $this->storage = new PdoCodeTokenStorage(
             new PDO(
