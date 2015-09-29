@@ -207,7 +207,13 @@ class PdoCodeTokenStorage implements AuthorizationCodeStorageInterface, AccessTo
         foreach ($queries as $q) {
             $this->db->query($q);
         }
-        $tables = array('authorization_codes', 'authorization_codes_log');
+
+        $tables = array(
+            'authorization_codes',
+            'authorization_codes_log',
+            'access_tokens',
+        );
+
         foreach ($tables as $t) {
             // make sure the tables are empty
             $this->db->query(
