@@ -40,7 +40,7 @@ class PdoResourceServerStorage implements ResourceServerStorageInterface
         $stmt = $this->db->prepare(
             sprintf(
                 'SELECT id, scope, secret FROM %s WHERE id = :id',
-                $this->prefix.'resource_servers'
+                $this->prefix.'resource_server'
             )
         );
 
@@ -69,7 +69,7 @@ class PdoResourceServerStorage implements ResourceServerStorageInterface
                 secret VARCHAR(255) NOT NULL,
                 PRIMARY KEY (id)
             )',
-            $prefix.'resource_servers'
+            $prefix.'resource_server'
         );
 
         return $query;
@@ -81,7 +81,7 @@ class PdoResourceServerStorage implements ResourceServerStorageInterface
         foreach ($queries as $q) {
             $this->db->query($q);
         }
-        $tables = array('resource_servers');
+        $tables = array('resource_server');
         foreach ($tables as $t) {
             // make sure the tables are empty
             $this->db->query(

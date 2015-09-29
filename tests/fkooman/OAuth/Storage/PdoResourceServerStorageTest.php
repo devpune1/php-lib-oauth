@@ -38,7 +38,7 @@ class PdoResourceServerStorageTest extends PHPUnit_Framework_TestCase
 
         // add a resource server
         $db->query(
-            'INSERT INTO resource_servers (id, scope, secret) VALUES("foo", "read", "$2y$10$vrHBaF01p9yqbOksTrR7aueltwHS4WA.dCktSHlrjDcFub.rKZuSa")'
+            'INSERT INTO resource_server (id, scope, secret) VALUES("foo", "read", "$2y$10$vrHBaF01p9yqbOksTrR7aueltwHS4WA.dCktSHlrjDcFub.rKZuSa")'
         );
     }
 
