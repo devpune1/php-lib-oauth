@@ -177,6 +177,7 @@ class OAuthServerTest extends PHPUnit_Framework_TestCase
                 'Content-Type: application/json',
                 'Cache-Control: no-store',
                 'Pragma: no-cache',
+                'Content-Length: 145',
                 '',
                 '{"access_token":"eyJjbGllbnRfaWQiOiJ0ZXN0LWNsaWVudCIsInVzZXJfaWQiOiJhZG1pbiIsImlzc3VlZF9hdCI6MTIzNDU2Nzg5MCwic2NvcGUiOiJwb3N0In0","scope":"post"}',
             ),
@@ -263,6 +264,7 @@ class OAuthServerTest extends PHPUnit_Framework_TestCase
             array(
                 'HTTP/1.1 200 OK',
                 'Content-Type: application/json',
+                'Content-Length: 109',
                 '',
                 '{"active":true,"client_id":"test-client","scope":"post","token_type":"bearer","iat":1234567890,"sub":"admin"}',
             ),
