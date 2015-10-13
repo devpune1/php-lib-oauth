@@ -34,8 +34,11 @@ class InputValidation
 
     public static function responseType($responseType)
     {
-        // we only support 'code' for now
-        if ('code' !== $responseType) {
+        $supportedResponseTypes = array(
+            'code',
+            'token',
+        );
+        if (!in_array($responseType, $supportedResponseTypes)) {
             return false;
         }
 

@@ -128,47 +128,10 @@ class OAuthServer
         $this->validateAuthorizeRequestWithClient($client, $postAuthorizeRequest);
 
         if ('yes' === $postAuthorizeRequest['approval']) {
-            // approved
-            $code = $this->authorizationCodeStorage->storeAuthorizationCode(
-                new AuthorizationCode(
-                    $postAuthorizeRequest['client_id'],
-                    $userInfo->getUserId(),
-                    $this->io->getTime(),
-                    $postAuthorizeRequest['redirect_uri'],
-                    $postAuthorizeRequest['scope']
-                )
-            );
-
-            $separator = false === strpos($postAuthorizeRequest['redirect_uri'], '?') ? '?' : '&';
-
-            $redirectTo = sprintf(
-                '%s%scode=%s&state=%s',
-                $postAuthorizeRequest['redirect_uri'],
-                $separator,
-                $code,
-                $postAuthorizeRequest['state']
-            );
-
-            return new RedirectResponse(
-                $redirectTo,
-                302
-            );
+            return $this->handleApproval($postAuthorizeRequest, $userInfo);
         }
 
-        // not approved
-        $separator = false === strpos($postAuthorizeRequest['redirect_uri'], '?') ? '?' : '&';
-
-        $redirectTo = sprintf(
-            '%s%serror=access_denied&state=%s',
-            $postAuthorizeRequest['redirect_uri'],
-            $separator,
-            $postAuthorizeRequest['state']
-        );
-
-        return new RedirectResponse(
-            $redirectTo,
-            302
-        );
+        return $this->handleDenial($postAuthorizeRequest, $userInfo);
     }
 
     public function postToken(Request $request, UserInfoInterface $clientUserInfo = null)
@@ -314,5 +277,118 @@ class OAuthServer
                 throw new BadRequestException('scope not supported by client');
             }
         }
+    }
+
+    private function handleApproval(array $postAuthorizeRequest, UserInfoInterface $userInfo)
+    {
+        switch ($postAuthorizeRequest['response_type']) {
+            case 'code':
+                return $this->handleCodeApproval($postAuthorizeRequest, $userInfo);
+            case 'token':
+                return $this->handleTokenApproval($postAuthorizeRequest, $userInfo);
+            default:
+                throw new BadRequestException('invalid response_type');
+        }
+    }
+
+    private function handleDenial(array $postAuthorizeRequest, UserInfoInterface $userInfo)
+    {
+        switch ($postAuthorizeRequest['response_type']) {
+            case 'code':
+                return $this->handleCodeDenial($postAuthorizeRequest, $userInfo);
+            case 'token':
+                return $this->handleTokenDenial($postAuthorizeRequest, $userInfo);
+            default:
+                throw new BadRequestException('invalid response_type');
+        }
+    }
+
+    private function handleCodeApproval(array $postAuthorizeRequest, UserInfoInterface $userInfo)
+    {
+        // generate authorization code and redirect back to client
+        $code = $this->authorizationCodeStorage->storeAuthorizationCode(
+            new AuthorizationCode(
+                $postAuthorizeRequest['client_id'],
+                $userInfo->getUserId(),
+                $this->io->getTime(),
+                $postAuthorizeRequest['redirect_uri'],
+                $postAuthorizeRequest['scope']
+            )
+        );
+
+        $separator = false === strpos($postAuthorizeRequest['redirect_uri'], '?') ? '?' : '&';
+
+        $redirectTo = sprintf(
+            '%s%scode=%s&state=%s',
+            $postAuthorizeRequest['redirect_uri'],
+            $separator,
+            $code,
+            $postAuthorizeRequest['state']
+        );
+
+        return new RedirectResponse(
+            $redirectTo,
+            302
+        );
+    }
+
+    private function handleCodeDenial(array $postAuthorizeRequest, UserInfoInterface $userInfo)
+    {
+        $separator = false === strpos($postAuthorizeRequest['redirect_uri'], '?') ? '?' : '&';
+
+        $redirectTo = sprintf(
+            '%s%serror=access_denied&state=%s',
+            $postAuthorizeRequest['redirect_uri'],
+            $separator,
+            $postAuthorizeRequest['state']
+        );
+
+        return new RedirectResponse(
+            $redirectTo,
+            302
+        );
+    }
+
+    private function handleTokenApproval(array $postAuthorizeRequest, UserInfoInterface $userInfo)
+    {
+        // generate access token and redirect back to client
+        $accessToken = $this->accessTokenStorage->storeAccessToken(
+            new AccessToken(
+                $postAuthorizeRequest['client_id'],
+                $userInfo->getUserId(),
+                $this->io->getTime(),
+                $postAuthorizeRequest['scope']
+            )
+        );
+
+        // InputValidation already checks that the redirect_uri does not have
+        // a fragment...
+        $redirectTo = sprintf(
+            '%s#access_token=%s&token_type=bearer&state=%s',
+            $postAuthorizeRequest['redirect_uri'],
+            $accessToken,
+            $postAuthorizeRequest['state']
+        );
+
+        return new RedirectResponse(
+            $redirectTo,
+            302
+        );
+    }
+
+    private function handleTokenDenial(array $postAuthorizeRequest, UserInfoInterface $userInfo)
+    {
+        // InputValidation already checks that the redirect_uri does not have
+        // a fragment...
+        $redirectTo = sprintf(
+            '%s#error=access_denied&state=%s',
+            $postAuthorizeRequest['redirect_uri'],
+            $postAuthorizeRequest['state']
+        );
+
+        return new RedirectResponse(
+            $redirectTo,
+            302
+        );
     }
 }

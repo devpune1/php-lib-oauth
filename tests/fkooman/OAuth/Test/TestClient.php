@@ -46,6 +46,16 @@ class TestClient implements ClientStorageInterface
             );
         }
 
+        if ('test-token-client' === $clientId) {
+            return new Client(
+                $clientId,
+                'token',
+                'https://localhost/cb',
+                'post',
+                null   // no secret set
+            );
+        }
+
         // not registered
         return false;
     }

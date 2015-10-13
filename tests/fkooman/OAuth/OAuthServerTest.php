@@ -74,7 +74,11 @@ class OAuthServerTest extends PHPUnit_Framework_TestCase
         );
     }
 
-    public function testGetAuthorize()
+    //
+    // CODE
+    //
+
+    public function testGetCodeAuthorize()
     {
         $query = array(
             'client_id' => 'test-client',
@@ -99,7 +103,7 @@ class OAuthServerTest extends PHPUnit_Framework_TestCase
         );
     }
 
-    public function testPostAuthorize()
+    public function testPostCodeAuthorize()
     {
         $query = array(
             'client_id' => 'test-client',
@@ -122,7 +126,7 @@ class OAuthServerTest extends PHPUnit_Framework_TestCase
         );
     }
 
-    public function testPostAuthorizeNoApproval()
+    public function testPostCodeAuthorizeNoApproval()
     {
         $query = array(
             'client_id' => 'test-client',
@@ -263,6 +267,81 @@ class OAuthServerTest extends PHPUnit_Framework_TestCase
                 '{"active":true,"client_id":"test-client","scope":"post","token_type":"bearer","iat":1234567890,"sub":"admin"}',
             ),
             $this->oauthServer->postIntrospect($request, $this->userInfo)->toArray()
+        );
+    }
+
+    // 
+    //  TOKEN
+    //
+
+    public function testGetTokenAuthorize()
+    {
+        $query = array(
+            'client_id' => 'test-token-client',
+            'response_type' => 'token',
+            'redirect_uri' => 'https://localhost/cb',
+            'state' => '12345',
+            'scope' => 'post',
+        );
+        $request = $this->getAuthorizeRequest($query, 'GET');
+
+        $this->assertSame(
+            array(
+                'getAuthorize' => array(
+                    'user_id' => 'admin',
+                    'client_id' => 'test-token-client',
+                    'redirect_uri' => 'https://localhost/cb',
+                    'scope' => 'post',
+                    'request_url' => 'https://oauth.example/authorize?client_id=test-token-client&response_type=token&redirect_uri=https%3A%2F%2Flocalhost%2Fcb&state=12345&scope=post',
+                ),
+            ),
+            $this->oauthServer->getAuthorize($request, $this->userInfo)
+        );
+    }
+
+    public function testPostTokenAuthorize()
+    {
+        $query = array(
+            'client_id' => 'test-token-client',
+            'redirect_uri' => 'https://localhost/cb',
+            'state' => '12345',
+            'response_type' => 'token',
+            'scope' => 'post',
+        );
+        $request = $this->getAuthorizeRequest($query, 'POST', array('approval' => 'yes'));
+
+        $this->assertSame(
+            array(
+                'HTTP/1.1 302 Found',
+                'Content-Type: text/html;charset=UTF-8',
+                'Location: https://localhost/cb#access_token=eyJjbGllbnRfaWQiOiJ0ZXN0LXRva2VuLWNsaWVudCIsInVzZXJfaWQiOiJhZG1pbiIsImlzc3VlZF9hdCI6MTIzNDU2Nzg5MCwic2NvcGUiOiJwb3N0In0&token_type=bearer&state=12345',
+                '',
+                '',
+            ),
+            $this->oauthServer->postAuthorize($request, $this->userInfo)->toArray()
+        );
+    }
+
+    public function testPostTokenAuthorizeNoApproval()
+    {
+        $query = array(
+            'client_id' => 'test-token-client',
+            'redirect_uri' => 'https://localhost/cb',
+            'state' => '12345',
+            'response_type' => 'token',
+            'scope' => 'post',
+        );
+        $request = $this->getAuthorizeRequest($query, 'POST', array('approval' => 'no'));
+
+        $this->assertSame(
+            array(
+                'HTTP/1.1 302 Found',
+                'Content-Type: text/html;charset=UTF-8',
+                'Location: https://localhost/cb#error=access_denied&state=12345',
+                '',
+                '',
+            ),
+            $this->oauthServer->postAuthorize($request, $this->userInfo)->toArray()
         );
     }
 
