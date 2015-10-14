@@ -18,6 +18,7 @@
         "ext-pcre": "*",
         "ext-pdo": "*",
         "ext-spl": "*",
+        "fkooman/http": "^1.1.0",
         "fkooman/io": "^1.0.0",
         "fkooman/json": "^1.0.0",
         "fkooman/rest": "^1.0.0",
