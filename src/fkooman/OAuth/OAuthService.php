@@ -29,56 +29,71 @@ class OAuthService extends Service
     /** @var OAuthServer */
     protected $server;
 
-    public function __construct(OAuthServer $server, AuthenticationPluginInterface $userAuth, AuthenticationPluginInterface $apiAuth)
+    /** @var bool */
+    protected $disableTokenEndpoint;
+
+    /** @var bool */
+    protected $disableIntrospectEndpoint;
+
+    public function __construct(OAuthServer $server, AuthenticationPluginInterface $userAuth, AuthenticationPluginInterface $apiAuth = null, array $opt = array())
     {
         parent::__construct();
 
         $this->server = $server;
+        $this->disableTokenEndpoint = array_key_exists('disable_token_endpoint', $opt) ? true : false;
+        $this->disableIntrospectEndpoint = array_key_exists('disable_introspect_endpoint', $opt) ? true : false;
+
         $this->registerAuthenticationPlugin($userAuth, $apiAuth);
         $this->registerRoutes();
     }
 
-    private function registerAuthenticationPlugin(AuthenticationPluginInterface $userAuth, AuthenticationPluginInterface $apiAuth)
+    private function registerAuthenticationPlugin(AuthenticationPluginInterface $userAuth, AuthenticationPluginInterface $apiAuth = null)
     {
         $authenticationPlugin = new AuthenticationPlugin();
 
         // register 'user' authentication
         $authenticationPlugin->register($userAuth, 'user');
 
-        // register 'api' authentication
-        $authenticationPlugin->register($apiAuth, 'api');
+        if (null !== $apiAuth) {
+            // register 'api' authentication
+            $authenticationPlugin->register($apiAuth, 'api');
+        }
 
-        // register 'client' authentication
-        $clientAuth = new BasicAuthentication(
-            function ($clientId) {
-                $client = $this->server->getClientStorage()->getClient($clientId);
-                if (false === $client) {
-                    return false;
-                }
+        if (!$this->disableTokenEndpoint) {
+            // register 'client' authentication
+            $clientAuth = new BasicAuthentication(
+                function ($clientId) {
+                    $client = $this->server->getClientStorage()->getClient($clientId);
+                    if (false === $client) {
+                        return false;
+                    }
 
-                return $client->getSecret();
-            },
-            array(
-                'realm' => 'OAuth AS',
-            )
-        );
-        $authenticationPlugin->register($clientAuth, 'client');
+                    return $client->getSecret();
+                },
+                array(
+                    'realm' => 'OAuth AS',
+                )
+            );
+            $authenticationPlugin->register($clientAuth, 'client');
+        }
 
-        // register 'resource server' authentication
-        $resourceServerAuth = new BasicAuthentication(
-            function ($resourceServerId) {
-                $resourceServer = $this->server->getResourceServerStorage()->getResourceServer($resourceServerId);
-                if (false === $resourceServer) {
-                    return false;
-                }
+        if (!$this->disableIntrospectEndpoint) {
+            // register 'resource server' authentication
+            $resourceServerAuth = new BasicAuthentication(
+                function ($resourceServerId) {
+                    $resourceServer = $this->server->getResourceServerStorage()->getResourceServer($resourceServerId);
+                    if (false === $resourceServer) {
+                        return false;
+                    }
 
-                return $resourceServer->getSecret();
-            },
-            array(
-                'realm' => 'OAuth AS',
-            )
-        );
-        $authenticationPlugin->register($resourceServerAuth, 'resource_server');
+                    return $resourceServer->getSecret();
+                },
+                array(
+                    'realm' => 'OAuth AS',
+                )
+            );
+            $authenticationPlugin->register($resourceServerAuth, 'resource_server');
+        }
 
         $this->getPluginRegistry()->registerDefaultPlugin($authenticationPlugin);
     }
@@ -110,29 +125,33 @@ class OAuthService extends Service
 
         );
 
-        $this->post(
-            '/token',
-            function (Request $request, UserInfoInterface $userInfo = null) {
-                return $this->server->postToken($request, $userInfo);
-            },
-            array(
-                'fkooman\Rest\Plugin\Authentication\AuthenticationPlugin' => array(
-                    'activate' => array('client'),
-                    'require' => false,
-                ),
-            )
-        );
+        if (!$this->disableTokenEndpoint) {
+            $this->post(
+                '/token',
+                function (Request $request, UserInfoInterface $userInfo = null) {
+                    return $this->server->postToken($request, $userInfo);
+                },
+                array(
+                    'fkooman\Rest\Plugin\Authentication\AuthenticationPlugin' => array(
+                        'activate' => array('client'),
+                        'require' => false,
+                    ),
+                )
+            );
+        }
 
-        $this->post(
-            '/introspect',
-            function (Request $request, UserInfoInterface $userInfo) {
-                return $this->server->postIntrospect($request, $userInfo);
-            },
-            array(
-                'fkooman\Rest\Plugin\Authentication\AuthenticationPlugin' => array(
-                    'activate' => array('resource_server'),
-                ),
-            )
-        );
+        if (!$this->disableIntrospectEndpoint) {
+            $this->post(
+                '/introspect',
+                function (Request $request, UserInfoInterface $userInfo) {
+                    return $this->server->postIntrospect($request, $userInfo);
+                },
+                array(
+                    'fkooman\Rest\Plugin\Authentication\AuthenticationPlugin' => array(
+                        'activate' => array('resource_server'),
+                    ),
+                )
+            );
+        }
     }
 }
