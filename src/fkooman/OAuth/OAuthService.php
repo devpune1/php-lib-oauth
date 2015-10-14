@@ -29,24 +29,27 @@ class OAuthService extends Service
     /** @var OAuthServer */
     protected $server;
 
-    public function __construct(OAuthServer $server, AuthenticationPluginInterface $userAuthenticationPlugin)
+    public function __construct(OAuthServer $server, AuthenticationPluginInterface $userAuth, AuthenticationPluginInterface $apiAuth)
     {
         parent::__construct();
 
         $this->server = $server;
-        $this->registerAuthenticationPlugin($userAuthenticationPlugin);
+        $this->registerAuthenticationPlugin($userAuth, $apiAuth);
         $this->registerRoutes();
     }
 
-    private function registerAuthenticationPlugin(AuthenticationPluginInterface $userAuthenticationPlugin)
+    private function registerAuthenticationPlugin(AuthenticationPluginInterface $userAuth, AuthenticationPluginInterface $apiAuth)
     {
         $authenticationPlugin = new AuthenticationPlugin();
 
         // register 'user' authentication
-        $authenticationPlugin->register($userAuthenticationPlugin, 'user');
+        $authenticationPlugin->register($userAuth, 'user');
+
+        // register 'api' authentication
+        $authenticationPlugin->register($apiAuth, 'api');
 
         // register 'client' authentication
-        $clientAuthentication = new BasicAuthentication(
+        $clientAuth = new BasicAuthentication(
             function ($clientId) {
                 $client = $this->server->getClientStorage()->getClient($clientId);
                 if (false === $client) {
@@ -59,10 +62,10 @@ class OAuthService extends Service
                 'realm' => 'OAuth AS',
             )
         );
-        $authenticationPlugin->register($clientAuthentication, 'client');
+        $authenticationPlugin->register($clientAuth, 'client');
 
         // register 'resource server' authentication
-        $resourceServerAuthentication = new BasicAuthentication(
+        $resourceServerAuth = new BasicAuthentication(
             function ($resourceServerId) {
                 $resourceServer = $this->server->getResourceServerStorage()->getResourceServer($resourceServerId);
                 if (false === $resourceServer) {
@@ -75,7 +78,7 @@ class OAuthService extends Service
                 'realm' => 'OAuth AS',
             )
         );
-        $authenticationPlugin->register($resourceServerAuthentication, 'resource_server');
+        $authenticationPlugin->register($resourceServerAuth, 'resource_server');
 
         $this->getPluginRegistry()->registerDefaultPlugin($authenticationPlugin);
     }
