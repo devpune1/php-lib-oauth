@@ -33,6 +33,7 @@ class PdoResourceServerStorage implements ResourceServerStorageInterface
     {
         $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $this->db = $db;
+        $this->prefix = $prefix;
     }
 
     public function getResourceServer($resourceServerId)

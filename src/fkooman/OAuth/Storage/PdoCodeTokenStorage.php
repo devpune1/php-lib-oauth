@@ -42,6 +42,7 @@ class PdoCodeTokenStorage implements AuthorizationCodeStorageInterface, AccessTo
         if (null === $io) {
             $io = new IO();
         }
+        $this->prefix = $prefix;
         $this->io = $io;
     }
 
