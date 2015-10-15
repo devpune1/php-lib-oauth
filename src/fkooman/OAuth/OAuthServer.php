@@ -319,12 +319,14 @@ class OAuthServer
         $separator = false === strpos($postAuthorizeRequest['redirect_uri'], '?') ? '?' : '&';
 
         $redirectTo = sprintf(
-            '%s%scode=%s&state=%s',
+            '%s%scode=%s',
             $postAuthorizeRequest['redirect_uri'],
             $separator,
-            $code,
-            $postAuthorizeRequest['state']
+            $code
         );
+        if (null !== $postAuthorizeRequest['state']) {
+            $redirectTo .= sprintf('&state=%s', $postAuthorizeRequest['state']);
+        }
 
         return new RedirectResponse(
             $redirectTo,
@@ -337,11 +339,13 @@ class OAuthServer
         $separator = false === strpos($postAuthorizeRequest['redirect_uri'], '?') ? '?' : '&';
 
         $redirectTo = sprintf(
-            '%s%serror=access_denied&state=%s',
+            '%s%serror=access_denied',
             $postAuthorizeRequest['redirect_uri'],
-            $separator,
-            $postAuthorizeRequest['state']
+            $separator
         );
+        if (null !== $postAuthorizeRequest['state']) {
+            $redirectTo .= sprintf('&state=%s', $postAuthorizeRequest['state']);
+        }
 
         return new RedirectResponse(
             $redirectTo,
@@ -364,11 +368,13 @@ class OAuthServer
         // InputValidation already checks that the redirect_uri does not have
         // a fragment...
         $redirectTo = sprintf(
-            '%s#access_token=%s&token_type=bearer&state=%s',
+            '%s#access_token=%s&token_type=bearer',
             $postAuthorizeRequest['redirect_uri'],
-            $accessToken,
-            $postAuthorizeRequest['state']
+            $accessToken
         );
+        if (null !== $postAuthorizeRequest['state']) {
+            $redirectTo .= sprintf('&state=%s', $postAuthorizeRequest['state']);
+        }
 
         return new RedirectResponse(
             $redirectTo,
@@ -381,10 +387,12 @@ class OAuthServer
         // InputValidation already checks that the redirect_uri does not have
         // a fragment...
         $redirectTo = sprintf(
-            '%s#error=access_denied&state=%s',
-            $postAuthorizeRequest['redirect_uri'],
-            $postAuthorizeRequest['state']
+            '%s#error=access_denied',
+            $postAuthorizeRequest['redirect_uri']
         );
+        if (null !== $postAuthorizeRequest['state']) {
+            $redirectTo .= sprintf('&state=%s', $postAuthorizeRequest['state']);
+        }
 
         return new RedirectResponse(
             $redirectTo,

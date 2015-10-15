@@ -56,13 +56,12 @@ class RequestValidation
             }
         }
 
-        // RECOMMENDED, but treat as REQUIRED state
+        // RECOMMENDED, but treat as OPTIONAL state
         $state = $request->getUrl()->getQueryParameter('state');
-        if (is_null($state)) {
-            throw new BadRequestException('missing state');
-        }
-        if (false === InputValidation::state($state)) {
-            throw new BadRequestException('invalid state');
+        if (null !== $state) {
+            if (false === InputValidation::state($state)) {
+                throw new BadRequestException('invalid state');
+            }
         }
 
         return array(
