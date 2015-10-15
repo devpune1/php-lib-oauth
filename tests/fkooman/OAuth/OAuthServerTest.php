@@ -97,6 +97,7 @@ class OAuthServerTest extends PHPUnit_Framework_TestCase
                     'redirect_uri' => 'https://localhost/cb',
                     'scope' => 'post',
                     'request_url' => 'https://oauth.example/authorize?client_id=test-client&response_type=code&redirect_uri=https%3A%2F%2Flocalhost%2Fcb&state=12345&scope=post',
+                    'has_state' => true,
                 ),
             ),
             $this->oauthServer->getAuthorize($request, $this->userInfo)
@@ -295,6 +296,7 @@ class OAuthServerTest extends PHPUnit_Framework_TestCase
                     'redirect_uri' => 'https://localhost/cb',
                     'scope' => 'post',
                     'request_url' => 'https://oauth.example/authorize?client_id=test-token-client&response_type=token&redirect_uri=https%3A%2F%2Flocalhost%2Fcb&state=12345&scope=post',
+                    'has_state' => true,
                 ),
             ),
             $this->oauthServer->getAuthorize($request, $this->userInfo)

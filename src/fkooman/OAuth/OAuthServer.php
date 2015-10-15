@@ -105,6 +105,7 @@ class OAuthServer
                 'redirect_uri' => $client->getRedirectUri(),
                 'scope' => $client->getScope(),
                 'request_url' => $request->getUrl()->toString(),
+                'has_state' => null !== $authorizeRequest['state'],
             )
         );
     }
