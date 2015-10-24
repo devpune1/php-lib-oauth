@@ -15,19 +15,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace fkooman\OAuth\Test;
+namespace fkooman\OAuth;
 
-use fkooman\Tpl\TemplateManagerInterface;
-use fkooman\Json\Json;
-
-class TestTemplateManager implements TemplateManagerInterface
+class Approval
 {
-    public function setDefault(array $templateVariables)
+    /** @var string */
+    private $clientId;
+
+    /** @var string */
+    private $userId;
+
+    /** @var string */
+    private $scope;
+
+    public function __construct($clientId, $userId, $scope)
     {
+        $this->clientId = $clientId;
+        $this->userId = $userId;
+        $this->scope = $scope;
     }
 
-    public function render($templateName, array $templateVariables = array())
+    public function getClientId()
     {
-        return Json::encode(array($templateName => $templateVariables));
+        return $this->clientId;
+    }
+
+    public function getUserId()
+    {
+        return $this->userId;
+    }
+
+    public function getScope()
+    {
+        return $this->scope;
     }
 }

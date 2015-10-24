@@ -1,5 +1,16 @@
 # Release History
 
+## 3.0.0 (...)
+- add support for Approvals to remember applications the user has granted 
+  permissions to
+- rename `access_tokens`, `authorization_codes` and `authorization_codes_log` 
+  tables to singular
+- rename `PdoCodeTokenStorage` to `PdoApprovalCodeTokenStorage` (API change)
+- major API overhaul
+- much better documentation
+- big cleanup and simplification
+- additional unit test coverage
+
 ## 2.0.0 (2015-10-15)
 - implement `token` response_type (RFC 6749#4.2)
 - rename resource_servers table to resource_server (singular)

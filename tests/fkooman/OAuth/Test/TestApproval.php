@@ -17,17 +17,23 @@
  */
 namespace fkooman\OAuth\Test;
 
-use fkooman\Tpl\TemplateManagerInterface;
-use fkooman\Json\Json;
+use fkooman\OAuth\ApprovalStorageInterface;
+use fkooman\OAuth\Approval;
 
-class TestTemplateManager implements TemplateManagerInterface
+class TestApproval implements ApprovalStorageInterface
 {
-    public function setDefault(array $templateVariables)
+    public function storeApproval(Approval $approval)
     {
+        return true;
     }
 
-    public function render($templateName, array $templateVariables = array())
+    public function isApproved(Approval $approval)
     {
-        return Json::encode(array($templateName => $templateVariables));
+        return false;
+    }
+
+    public function deleteApproval(Approval $approval)
+    {
+        return true;
     }
 }

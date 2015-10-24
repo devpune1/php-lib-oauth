@@ -43,6 +43,7 @@ class RequestValidation
         }
 
         // OPTIONAL redirect_uri
+        // XXX: it seems this is required by this code?
         $redirectUri = $request->getUrl()->getQueryParameter('redirect_uri');
         if (false === InputValidation::redirectUri($redirectUri)) {
             throw new BadRequestException('invalid redirect_uri');

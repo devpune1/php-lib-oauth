@@ -20,9 +20,10 @@ namespace fkooman\OAuth\Storage;
 use PHPUnit_Framework_TestCase;
 use fkooman\OAuth\AuthorizationCode;
 use fkooman\OAuth\AccessToken;
+use fkooman\OAuth\Approval;
 use PDO;
 
-class PdoCodeTokenStorageTest extends PHPUnit_Framework_TestCase
+class PdoApprovalCodeTokenStorageTest extends PHPUnit_Framework_TestCase
 {
     /** @var PdoAuthorizationCodeStorage */
     private $storage;
@@ -32,7 +33,7 @@ class PdoCodeTokenStorageTest extends PHPUnit_Framework_TestCase
         $io = $this->getMockBuilder('fkooman\IO\IO')->getMock();
         $io->expects($this->any())->method('getRandom')->will($this->returnValue('112233ff'));
 
-        $this->storage = new PdoCodeTokenStorage(
+        $this->storage = new PdoApprovalCodeTokenStorage(
             new PDO(
                 $GLOBALS['DB_DSN'],
                 $GLOBALS['DB_USER'],
@@ -110,5 +111,61 @@ class PdoCodeTokenStorageTest extends PHPUnit_Framework_TestCase
     public function testGetMissingToken()
     {
         $this->assertFalse($this->storage->retrieveAccessToken('112233ff'));
+    }
+
+    public function testStoreApproval()
+    {
+        $approval = new Approval(
+            'foo',
+            'bar',
+            'foo bar'
+        );
+        $this->assertTrue($this->storage->storeApproval($approval));
+    }
+
+    // this test throws an exception, should not store the same approval
+    // twice!
+#    public function testStoreApprovalApproval()
+#    {
+#        $approval = new Approval(
+#            'foo',
+#            'bar',
+#            'foo bar'
+#        );
+#        $this->assertTrue($this->storage->storeApproval($approval));
+#        $this->assertFalse($this->storage->storeApproval($approval));
+#    }
+
+    public function testIsApproved()
+    {
+        $approval = new Approval(
+            'foo',
+            'bar',
+            'foo bar'
+        );
+        $this->assertTrue($this->storage->storeApproval($approval));
+        $this->assertTrue($this->storage->isApproved($approval));
+    }
+
+    public function testIsNotApproved()
+    {
+        $approval = new Approval(
+            'foo',
+            'bar',
+            'foo bar'
+        );
+        $this->assertFalse($this->storage->isApproved($approval));
+    }
+
+    public function testDeleteApproved()
+    {
+        $approval = new Approval(
+            'foo',
+            'bar',
+            'foo bar'
+        );
+        $this->assertTrue($this->storage->storeApproval($approval));
+        $this->assertTrue($this->storage->deleteApproval($approval));
+        $this->assertFalse($this->storage->deleteApproval($approval));
     }
 }

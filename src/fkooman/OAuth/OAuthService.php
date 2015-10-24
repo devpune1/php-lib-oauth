@@ -19,91 +19,56 @@ namespace fkooman\OAuth;
 
 use fkooman\Rest\Service;
 use fkooman\Http\Request;
-use fkooman\Rest\Plugin\Authentication\Basic\BasicAuthentication;
-use fkooman\Rest\Plugin\Authentication\AuthenticationPlugin;
 use fkooman\Rest\Plugin\Authentication\UserInfoInterface;
-use fkooman\Rest\Plugin\Authentication\AuthenticationPluginInterface;
+use fkooman\IO\IO;
+use fkooman\Tpl\TemplateManagerInterface;
 
 class OAuthService extends Service
 {
+    protected $templateManager;
+
     /** @var OAuthServer */
     protected $server;
 
-    /** @var bool */
-    protected $disableTokenEndpoint;
+    /** @var array */
+    protected $options = array(
+        'disable_token_endpoint' => false,
+        'disable_introspect_endpoint' => false,
+        'oauth_route_prefix' => '',
+    );
 
-    /** @var bool */
-    protected $disableIntrospectEndpoint;
-
-    public function __construct(OAuthServer $server, AuthenticationPluginInterface $userAuth, AuthenticationPluginInterface $apiAuth = null, array $opt = array())
+    public function __construct(TemplateManagerInterface $templateManager, ClientStorageInterface $clientStorage, ResourceServerStorageInterface $resourceServerStorage, ApprovalStorageInterface $approvalStorage, AuthorizationCodeStorageInterface $authorizationCodeStorage, AccessTokenStorageInterface $accessTokenStorage, array $options = array(), IO $io = null)
     {
         parent::__construct();
 
-        $this->server = $server;
-        $this->disableTokenEndpoint = array_key_exists('disable_token_endpoint', $opt) ? true : false;
-        $this->disableIntrospectEndpoint = array_key_exists('disable_introspect_endpoint', $opt) ? true : false;
+        $this->templateManager = $templateManager;
 
-        $this->registerAuthenticationPlugin($userAuth, $apiAuth);
+        $this->server = new OAuthServer(
+            $clientStorage,
+            $resourceServerStorage,
+            $approvalStorage,
+            $authorizationCodeStorage,
+            $accessTokenStorage,
+            $io
+        );
+        $this->options = array_merge($this->options, $options);
         $this->registerRoutes();
-    }
-
-    private function registerAuthenticationPlugin(AuthenticationPluginInterface $userAuth, AuthenticationPluginInterface $apiAuth = null)
-    {
-        $authenticationPlugin = new AuthenticationPlugin();
-
-        // register 'user' authentication
-        $authenticationPlugin->register($userAuth, 'user');
-
-        if (null !== $apiAuth) {
-            // register 'api' authentication
-            $authenticationPlugin->register($apiAuth, 'api');
-        }
-
-        if (!$this->disableTokenEndpoint) {
-            // register 'client' authentication
-            $clientAuth = new BasicAuthentication(
-                function ($clientId) {
-                    $client = $this->server->getClientStorage()->getClient($clientId);
-                    if (false === $client) {
-                        return false;
-                    }
-
-                    return $client->getSecret();
-                },
-                array(
-                    'realm' => 'OAuth AS',
-                )
-            );
-            $authenticationPlugin->register($clientAuth, 'client');
-        }
-
-        if (!$this->disableIntrospectEndpoint) {
-            // register 'resource server' authentication
-            $resourceServerAuth = new BasicAuthentication(
-                function ($resourceServerId) {
-                    $resourceServer = $this->server->getResourceServerStorage()->getResourceServer($resourceServerId);
-                    if (false === $resourceServer) {
-                        return false;
-                    }
-
-                    return $resourceServer->getSecret();
-                },
-                array(
-                    'realm' => 'OAuth AS',
-                )
-            );
-            $authenticationPlugin->register($resourceServerAuth, 'resource_server');
-        }
-
-        $this->getPluginRegistry()->registerDefaultPlugin($authenticationPlugin);
     }
 
     private function registerRoutes()
     {
         $this->get(
-            '/authorize',
+            $this->options['oauth_route_prefix'].'/authorize',
             function (Request $request, UserInfoInterface $userInfo) {
-                return $this->server->getAuthorize($request, $userInfo);
+                $authorize = $this->server->getAuthorize($request, $userInfo);
+                if ($authorize instanceof Response) {
+                    return $authorize;
+                }
+                // XXX here authorize must be array type!
+                return $this->templateManager->render(
+                    'getAuthorize',
+                    $authorize
+                );
             },
             array(
                 'fkooman\Rest\Plugin\Authentication\AuthenticationPlugin' => array(
@@ -113,7 +78,7 @@ class OAuthService extends Service
         );
 
         $this->post(
-            '/authorize',
+            $this->options['oauth_route_prefix'].'/authorize',
             function (Request $request, UserInfoInterface $userInfo) {
                 return $this->server->postAuthorize($request, $userInfo);
             },
@@ -125,9 +90,9 @@ class OAuthService extends Service
 
         );
 
-        if (!$this->disableTokenEndpoint) {
+        if (!$this->options['disable_token_endpoint']) {
             $this->post(
-                '/token',
+                $this->options['oauth_route_prefix'].'/token',
                 function (Request $request, UserInfoInterface $userInfo = null) {
                     return $this->server->postToken($request, $userInfo);
                 },
@@ -140,9 +105,9 @@ class OAuthService extends Service
             );
         }
 
-        if (!$this->disableIntrospectEndpoint) {
+        if (!$this->options['disable_introspect_endpoint']) {
             $this->post(
-                '/introspect',
+                $this->options['oauth_route_prefix'].'/introspect',
                 function (Request $request, UserInfoInterface $userInfo) {
                     return $this->server->postIntrospect($request, $userInfo);
                 },

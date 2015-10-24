@@ -17,13 +17,13 @@
  */
 namespace fkooman\OAuth;
 
-require_once __DIR__.'/Test/TestTemplateManager.php';
+require_once __DIR__.'/Test/TestApproval.php';
 require_once __DIR__.'/Test/TestAuthorizationCode.php';
 require_once __DIR__.'/Test/TestAccessToken.php';
 require_once __DIR__.'/Test/TestClient.php';
 
 use PHPUnit_Framework_TestCase;
-use fkooman\OAuth\Test\TestTemplateManager;
+use fkooman\OAuth\Test\TestApproval;
 use fkooman\OAuth\Test\TestAuthorizationCode;
 use fkooman\OAuth\Test\TestAccessToken;
 use fkooman\OAuth\Test\TestClient;
@@ -48,7 +48,7 @@ class OAuthServerTest extends PHPUnit_Framework_TestCase
         $this->clientUserInfo = $this->getMockBuilder('fkooman\Rest\Plugin\Authentication\UserInfoInterface')->getMock();
         $this->clientUserInfo->expects($this->any())->method('getUserId')->will($this->returnValue('test-client'));
 
-        $testTemplateManager = new TestTemplateManager();
+        $testApproval = new TestApproval();
         $testAuthorizationCode = new TestAuthorizationCode();
         $testAccessToken = new TestAccessToken();
 
@@ -65,9 +65,9 @@ class OAuthServerTest extends PHPUnit_Framework_TestCase
         $io->expects($this->any())->method('getTime')->will($this->returnValue(1234567890));
 
         $this->oauthServer = new OAuthServer(
-            $testTemplateManager,
             new TestClient(),
             $resourceServer,
+            $testApproval,
             $testAuthorizationCode,
             $testAccessToken,
             $io
@@ -91,14 +91,12 @@ class OAuthServerTest extends PHPUnit_Framework_TestCase
 
         $this->assertSame(
             array(
-                'getAuthorize' => array(
-                    'user_id' => 'admin',
-                    'client_id' => 'test-client',
-                    'redirect_uri' => 'https://localhost/cb',
-                    'scope' => 'post',
-                    'request_url' => 'https://oauth.example/authorize?client_id=test-client&response_type=code&redirect_uri=https%3A%2F%2Flocalhost%2Fcb&state=12345&scope=post',
-                    'has_state' => true,
-                ),
+                'user_id' => 'admin',
+                'client_id' => 'test-client',
+                'redirect_uri' => 'https://localhost/cb',
+                'scope' => 'post',
+                'request_url' => 'https://oauth.example/authorize?client_id=test-client&response_type=code&redirect_uri=https%3A%2F%2Flocalhost%2Fcb&state=12345&scope=post',
+                'has_state' => true,
             ),
             $this->oauthServer->getAuthorize($request, $this->userInfo)
         );
@@ -290,14 +288,12 @@ class OAuthServerTest extends PHPUnit_Framework_TestCase
 
         $this->assertSame(
             array(
-                'getAuthorize' => array(
-                    'user_id' => 'admin',
-                    'client_id' => 'test-token-client',
-                    'redirect_uri' => 'https://localhost/cb',
-                    'scope' => 'post',
-                    'request_url' => 'https://oauth.example/authorize?client_id=test-token-client&response_type=token&redirect_uri=https%3A%2F%2Flocalhost%2Fcb&state=12345&scope=post',
-                    'has_state' => true,
-                ),
+                'user_id' => 'admin',
+                'client_id' => 'test-token-client',
+                'redirect_uri' => 'https://localhost/cb',
+                'scope' => 'post',
+                'request_url' => 'https://oauth.example/authorize?client_id=test-token-client&response_type=token&redirect_uri=https%3A%2F%2Flocalhost%2Fcb&state=12345&scope=post',
+                'has_state' => true,
             ),
             $this->oauthServer->getAuthorize($request, $this->userInfo)
         );

@@ -15,19 +15,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace fkooman\OAuth\Test;
+namespace fkooman\OAuth;
 
-use fkooman\Tpl\TemplateManagerInterface;
-use fkooman\Json\Json;
-
-class TestTemplateManager implements TemplateManagerInterface
+interface ApprovalStorageInterface
 {
-    public function setDefault(array $templateVariables)
-    {
-    }
+    public function storeApproval(Approval $approval);
 
-    public function render($templateName, array $templateVariables = array())
-    {
-        return Json::encode(array($templateName => $templateVariables));
-    }
+    public function isApproved(Approval $approval);
+
+    public function deleteApproval(Approval $approval);
 }

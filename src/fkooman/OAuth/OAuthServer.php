@@ -20,7 +20,6 @@ namespace fkooman\OAuth;
 use fkooman\Rest\Plugin\Authentication\UserInfoInterface;
 use fkooman\Http\Request;
 use fkooman\Http\RedirectResponse;
-use fkooman\Tpl\TemplateManagerInterface;
 use fkooman\Http\JsonResponse;
 use fkooman\Http\Exception\BadRequestException;
 use fkooman\IO\IO;
@@ -28,14 +27,14 @@ use fkooman\Http\Exception\UnauthorizedException;
 
 class OAuthServer
 {
-    /** @var TemplateManagerInterface */
-    private $templateManager;
-
     /** @var ClientStorageInterface */
     private $clientStorage;
 
     /** @var ResourceServerStorageInterface */
     private $resourceServerStorage;
+
+    /** @var ApprovalStorageInterface */
+    private $approvalStorage;
 
     /** @var AuthorizationCodeStorageInterface */
     private $authorizationCodeStorage;
@@ -46,37 +45,17 @@ class OAuthServer
     /** @var \fkooman\IO\IO */
     private $io;
 
-    public function __construct(TemplateManagerInterface $templateManager, ClientStorageInterface $clientStorage, ResourceServerStorageInterface $resourceServerStorage, AuthorizationCodeStorageInterface $authorizationCodeStorage, AccessTokenStorageInterface $accessTokenStorage, IO $io = null)
+    public function __construct(ClientStorageInterface $clientStorage, ResourceServerStorageInterface $resourceServerStorage, ApprovalStorageInterface $approvalStorage, AuthorizationCodeStorageInterface $authorizationCodeStorage, AccessTokenStorageInterface $accessTokenStorage, IO $io = null)
     {
-        $this->templateManager = $templateManager;
         $this->clientStorage = $clientStorage;
         $this->resourceServerStorage = $resourceServerStorage;
+        $this->approvalStorage = $approvalStorage;
         $this->authorizationCodeStorage = $authorizationCodeStorage;
         $this->accessTokenStorage = $accessTokenStorage;
         if (null === $io) {
             $io = new IO();
         }
         $this->io = $io;
-    }
-
-    /**
-     * Get the resource server storage.
-     *
-     * @return ResourceServerStorageInterface the resource server storage
-     */
-    public function getResourceServerStorage()
-    {
-        return $this->resourceServerStorage;
-    }
-
-    /**
-     * Get the resource server storage.
-     *
-     * @return ClientStorageInterface the client storage
-     */
-    public function getClientStorage()
-    {
-        return $this->clientStorage;
     }
 
     public function getAuthorize(Request $request, UserInfoInterface $userInfo)
@@ -96,17 +75,28 @@ class OAuthServer
         // verify authorize request with client information
         $this->validateAuthorizeRequestWithClient($client, $authorizeRequest);
 
-        // show the approval dialog
-        return $this->templateManager->render(
-            'getAuthorize',
-            array(
-                'user_id' => $userInfo->getUserId(),
-                'client_id' => $client->getClientId(),
-                'redirect_uri' => $client->getRedirectUri(),
-                'scope' => $client->getScope(),
-                'request_url' => $request->getUrl()->toString(),
-                'has_state' => null !== $authorizeRequest['state'],
-            )
+        // if approval is already there, return redirect
+        $approval = new Approval(
+            $client->getClientId(),
+            $userInfo->getUserId(),
+            $client->getScope()     // XXX what if requested scope is different from client scope?
+        );
+
+        if ($this->approvalStorage->isApproved($approval)) {
+            // already approved
+            // XXX we need to store the response_type as well for the 
+            // approval! and also redirect_uri!
+            return $this->handleApproval($authorizeRequest, $userInfo);
+        }
+
+        // if not, show the approval dialog
+        return array(
+            'user_id' => $userInfo->getUserId(),
+            'client_id' => $client->getClientId(),
+            'redirect_uri' => $client->getRedirectUri(),
+            'scope' => $client->getScope(),
+            'request_url' => $request->getUrl()->toString(),
+            'has_state' => null !== $authorizeRequest['state'],
         );
     }
 
