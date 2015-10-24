@@ -170,8 +170,8 @@ Instantiating the service is quite easy now:
     )
 
     // register the authentication plugin with all its methods
-    $service->registerDefaultPlugin($authenticationPlugin);
-     
+    $service->getPluginRegistry()->registerDefaultPlugin($authenticationPlugin); 
+
     // the protected resource!
     $service->get(
         '/protected_resource',
