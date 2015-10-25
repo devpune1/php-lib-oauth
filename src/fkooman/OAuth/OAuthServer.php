@@ -132,6 +132,22 @@ class OAuthServer
         return $this->approvalStorage->getApprovalList($userInfo->getUserId());
     }
 
+    public function deleteApproval(Request $request, UserInfoInterface $userInfo)
+    {
+        $deleteApprovalRequest = RequestValidation::validateDeleteApprovalRequest($request);
+
+        $approval = new Approval(
+            $userInfo->getUserId(),
+            $deleteApprovalRequest['client_id'],
+            $deleteApprovalRequest['redirect_uri'],
+            $deleteApprovalRequest['response_type'],
+            $deleteApprovalRequest['scope']
+        );
+        $this->approvalStorage->deleteApproval($approval);
+
+        return new RedirectResponse($request->getUrl()->toString(), 302);
+    }
+
     public function postToken(Request $request, UserInfoInterface $clientUserInfo = null)
     {
         // FIXME: deal with not authenticated attempts! check if the client is

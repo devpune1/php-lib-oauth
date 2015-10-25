@@ -107,6 +107,18 @@ class OAuthService extends Service
             )
         );
 
+        $this->delete(
+            $this->options['oauth_route_prefix'].'/approvals',
+            function (Request $request, UserInfoInterface $userInfo) {
+                return $this->service->deleteApproval($request, $userInfo);
+            },
+            array(
+                'fkooman\Rest\Plugin\Authentication\AuthenticationPlugin' => array(
+                    'activate' => array('user'),
+                ),
+            )
+        );
+
         if (!$this->options['disable_token_endpoint']) {
             $this->post(
                 $this->options['oauth_route_prefix'].'/token',
