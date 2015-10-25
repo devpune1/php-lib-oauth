@@ -224,7 +224,7 @@ class PdoApprovalCodeTokenStorage implements AuthorizationCodeStorageInterface, 
                 $this->prefix.'approval'
             )
         );
-        $stmt->bindValue(':user_id', $approval->getUserId(), PDO::PARAM_STR);
+        $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
         $stmt->execute();
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 

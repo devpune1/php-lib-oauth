@@ -93,11 +93,11 @@ class OAuthService extends Service
         $this->get(
             $this->options['oauth_route_prefix'].'/approvals',
             function (Request $request, UserInfoInterface $userInfo) {
-                $approvalList = $this->server->getApprovalList($request, $userInfo);
+                $approvalList = $this->server->getApprovalList($userInfo);
 
                 return $this->templateManager->render(
                     'getApprovalList',
-                    $approvalList
+                    array('approvalList' => $approvalList)
                 );
             },
             array(
