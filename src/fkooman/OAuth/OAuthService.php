@@ -110,7 +110,7 @@ class OAuthService extends Service
         $this->delete(
             $this->options['oauth_route_prefix'].'/approvals',
             function (Request $request, UserInfoInterface $userInfo) {
-                return $this->service->deleteApproval($request, $userInfo);
+                return $this->server->deleteApproval($request, $userInfo);
             },
             array(
                 'fkooman\Rest\Plugin\Authentication\AuthenticationPlugin' => array(
