@@ -19,6 +19,7 @@ namespace fkooman\OAuth;
 
 use fkooman\Rest\Service;
 use fkooman\Http\Request;
+use fkooman\Http\Response;
 use fkooman\Rest\Plugin\Authentication\UserInfoInterface;
 use fkooman\IO\IO;
 use fkooman\Tpl\TemplateManagerInterface;

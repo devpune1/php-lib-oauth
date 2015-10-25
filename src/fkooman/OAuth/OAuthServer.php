@@ -272,6 +272,17 @@ class OAuthServer
 
     private function handleApproval(array $postAuthorizeRequest, UserInfoInterface $userInfo)
     {
+        // store the approval if not yet approved
+        $approval = new Approval(
+            $postAuthorizeRequest['client_id'],
+            $userInfo->getUserId(),
+            $postAuthorizeRequest['scope']
+        );
+
+        if (!$this->approvalStorage->isApproved($approval)) {
+            $this->approvalStorage->storeApproval($approval);
+        }
+
         switch ($postAuthorizeRequest['response_type']) {
             case 'code':
                 return $this->handleCodeApproval($postAuthorizeRequest, $userInfo);
