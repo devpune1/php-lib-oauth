@@ -88,7 +88,23 @@ class OAuthService extends Service
                     'activate' => array('user'),
                 ),
             )
+        );
 
+        $this->get(
+            $this->options['oauth_route_prefix'].'/approvals',
+            function (Request $request, UserInfoInterface $userInfo) {
+                $approvalList = $this->server->getApprovalList($request, $userInfo);
+
+                return $this->templateManager->render(
+                    'getApprovalList',
+                    $approvalList
+                );
+            },
+            array(
+                'fkooman\Rest\Plugin\Authentication\AuthenticationPlugin' => array(
+                    'activate' => array('user'),
+                ),
+            )
         );
 
         if (!$this->options['disable_token_endpoint']) {

@@ -125,6 +125,11 @@ class OAuthServer
         return $this->handleDenial($postAuthorizeRequest, $userInfo);
     }
 
+    public function getApprovalList(UserInfoInterface $userInfo)
+    {
+        return $this->approvalStorage->getApprovalList($userInfo->getUserId());
+    }
+
     public function postToken(Request $request, UserInfoInterface $clientUserInfo = null)
     {
         // FIXME: deal with not authenticated attempts! check if the client is

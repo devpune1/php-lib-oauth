@@ -216,6 +216,26 @@ class PdoApprovalCodeTokenStorage implements AuthorizationCodeStorageInterface, 
         return 1 === $stmt->rowCount();
     }
 
+    public function getApprovalList($userId)
+    {
+        $stmt = $this->db->prepare(
+            sprintf(
+                'SELECT client_id, user_id, scope FROM %s WHERE user_id = :user_id',
+                $this->prefix.'approval'
+            )
+        );
+        $stmt->bindValue(':user_id', $approval->getUserId(), PDO::PARAM_STR);
+        $stmt->execute();
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $approvalList = array();
+        foreach ($result as $r) {
+            $approvalList[] = new Approval($r['client_id'], $r['user_id'], $r['scope']);
+        }
+
+        return $approvalList;
+    }
+
     public static function createTableQueries($prefix)
     {
         $query = array();

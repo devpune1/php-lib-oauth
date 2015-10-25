@@ -148,6 +148,16 @@ class OAuthServerTest extends PHPUnit_Framework_TestCase
         );
     }
 
+    public function testGetApprovalList()
+    {
+        $this->assertEquals(
+            array(
+                new Approval('foo', 'bar', 'read'),
+            ),
+            $this->oauthServer->getApprovalList($this->userInfo)
+        );
+    }
+
     public function testPostToken()
     {
         $request = new Request(
