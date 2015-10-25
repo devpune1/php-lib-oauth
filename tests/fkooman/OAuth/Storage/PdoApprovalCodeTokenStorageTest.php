@@ -116,8 +116,10 @@ class PdoApprovalCodeTokenStorageTest extends PHPUnit_Framework_TestCase
     public function testStoreApproval()
     {
         $approval = new Approval(
-            'foo',
-            'bar',
+            'user',
+            'test-client',
+            'https://example.org/cb',
+            'code',
             'foo bar'
         );
         $this->assertTrue($this->storage->storeApproval($approval));
@@ -139,8 +141,10 @@ class PdoApprovalCodeTokenStorageTest extends PHPUnit_Framework_TestCase
     public function testIsApproved()
     {
         $approval = new Approval(
-            'foo',
-            'bar',
+            'user',
+            'test-client',
+            'https://example.org/cb',
+            'code',
             'foo bar'
         );
         $this->assertTrue($this->storage->storeApproval($approval));
@@ -150,8 +154,10 @@ class PdoApprovalCodeTokenStorageTest extends PHPUnit_Framework_TestCase
     public function testIsNotApproved()
     {
         $approval = new Approval(
-            'foo',
-            'bar',
+            'user',
+            'test-client',
+            'https://example.org/cb',
+            'code',
             'foo bar'
         );
         $this->assertFalse($this->storage->isApproved($approval));
@@ -160,8 +166,10 @@ class PdoApprovalCodeTokenStorageTest extends PHPUnit_Framework_TestCase
     public function testDeleteApproved()
     {
         $approval = new Approval(
-            'foo',
-            'bar',
+            'user',
+            'test-client',
+            'https://example.org/cb',
+            'code',
             'foo bar'
         );
         $this->assertTrue($this->storage->storeApproval($approval));

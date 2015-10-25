@@ -77,8 +77,10 @@ class OAuthServer
 
         // if approval is already there, return redirect
         $approval = new Approval(
-            $client->getClientId(),
             $userInfo->getUserId(),
+            $client->getClientId(),
+            $authorizeRequest['redirect_uri'],
+            $authorizeRequest['response_type'],
             $client->getScope()     // XXX what if requested scope is different from client scope?
         );
 
@@ -279,8 +281,10 @@ class OAuthServer
     {
         // store the approval if not yet approved
         $approval = new Approval(
-            $postAuthorizeRequest['client_id'],
             $userInfo->getUserId(),
+            $postAuthorizeRequest['client_id'],
+            $postAuthorizeRequest['redirect_uri'],
+            $postAuthorizeRequest['response_type'],
             $postAuthorizeRequest['scope']
         );
 

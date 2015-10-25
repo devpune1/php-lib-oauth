@@ -20,19 +20,32 @@ namespace fkooman\OAuth;
 class Approval
 {
     /** @var string */
+    private $userId;
+
+    /** @var string */
     private $clientId;
 
     /** @var string */
-    private $userId;
+    private $redirectUri;
+
+    /** @var string */
+    private $responseType;
 
     /** @var string */
     private $scope;
 
-    public function __construct($clientId, $userId, $scope)
+    public function __construct($userId, $clientId, $redirectUri, $responseType, $scope)
     {
-        $this->clientId = $clientId;
         $this->userId = $userId;
+        $this->clientId = $clientId;
+        $this->redirectUri = $redirectUri;
+        $this->responseType = $responseType;
         $this->scope = $scope;
+    }
+
+    public function getUserId()
+    {
+        return $this->userId;
     }
 
     public function getClientId()
@@ -40,9 +53,14 @@ class Approval
         return $this->clientId;
     }
 
-    public function getUserId()
+    public function getRedirectUri()
     {
-        return $this->userId;
+        return $this->redirectUri;
+    }
+
+    public function getResponseType()
+    {
+        return $this->responseType;
     }
 
     public function getScope()

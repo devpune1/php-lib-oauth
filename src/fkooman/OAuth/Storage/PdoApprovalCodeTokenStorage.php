@@ -168,12 +168,14 @@ class PdoApprovalCodeTokenStorage implements AuthorizationCodeStorageInterface, 
     {
         $stmt = $this->db->prepare(
             sprintf(
-                'INSERT INTO %s (client_id, user_id, scope) VALUES(:client_id, :user_id, :scope)',
+                'INSERT INTO %s (user_id, client_id, redirect_uri, response_type, scope) VALUES(:user_id, :client_id, :redirect_uri, :response_type, :scope)',
                 $this->prefix.'approval'
             )
         );
-        $stmt->bindValue(':client_id', $approval->getClientId(), PDO::PARAM_STR);
         $stmt->bindValue(':user_id', $approval->getUserId(), PDO::PARAM_STR);
+        $stmt->bindValue(':client_id', $approval->getClientId(), PDO::PARAM_STR);
+        $stmt->bindValue(':redirect_uri', $approval->getRedirectUri(), PDO::PARAM_STR);
+        $stmt->bindValue(':response_type', $approval->getResponseType(), PDO::PARAM_STR);
         $stmt->bindValue(':scope', $approval->getScope(), PDO::PARAM_STR);
         $stmt->execute();
 
@@ -184,12 +186,14 @@ class PdoApprovalCodeTokenStorage implements AuthorizationCodeStorageInterface, 
     {
         $stmt = $this->db->prepare(
             sprintf(
-                'SELECT client_id, user_id, scope FROM %s WHERE client_id = :client_id AND user_id = :user_id AND scope = :scope',
+                'SELECT user_id, client_id, redirect_uri, response_type, scope FROM %s WHERE user_id = :user_id AND client_id = :client_id AND redirect_uri = :redirect_uri AND response_type = :response_type AND scope = :scope',
                 $this->prefix.'approval'
             )
         );
-        $stmt->bindValue(':client_id', $approval->getClientId(), PDO::PARAM_STR);
         $stmt->bindValue(':user_id', $approval->getUserId(), PDO::PARAM_STR);
+        $stmt->bindValue(':client_id', $approval->getClientId(), PDO::PARAM_STR);
+        $stmt->bindValue(':redirect_uri', $approval->getRedirectUri(), PDO::PARAM_STR);
+        $stmt->bindValue(':response_type', $approval->getResponseType(), PDO::PARAM_STR);
         $stmt->bindValue(':scope', $approval->getScope(), PDO::PARAM_STR);
         $stmt->execute();
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -204,12 +208,14 @@ class PdoApprovalCodeTokenStorage implements AuthorizationCodeStorageInterface, 
     {
         $stmt = $this->db->prepare(
             sprintf(
-                'DELETE FROM %s WHERE client_id = :client_id AND user_id = :user_id AND scope = :scope',
+                'DELETE FROM %s WHERE user_id = :user_id AND client_id = :client_id AND redirect_uri = :redirect_uri AND response_type = :response_type AND scope = :scope',
                 $this->prefix.'approval'
             )
         );
-        $stmt->bindValue(':client_id', $approval->getClientId(), PDO::PARAM_STR);
         $stmt->bindValue(':user_id', $approval->getUserId(), PDO::PARAM_STR);
+        $stmt->bindValue(':client_id', $approval->getClientId(), PDO::PARAM_STR);
+        $stmt->bindValue(':redirect_uri', $approval->getRedirectUri(), PDO::PARAM_STR);
+        $stmt->bindValue(':response_type', $approval->getResponseType(), PDO::PARAM_STR);
         $stmt->bindValue(':scope', $approval->getScope(), PDO::PARAM_STR);
         $stmt->execute();
 
@@ -220,7 +226,7 @@ class PdoApprovalCodeTokenStorage implements AuthorizationCodeStorageInterface, 
     {
         $stmt = $this->db->prepare(
             sprintf(
-                'SELECT client_id, user_id, scope FROM %s WHERE user_id = :user_id',
+                'SELECT user_id, client_id, redirect_uri, response_type, scope FROM %s WHERE user_id = :user_id',
                 $this->prefix.'approval'
             )
         );
@@ -230,7 +236,7 @@ class PdoApprovalCodeTokenStorage implements AuthorizationCodeStorageInterface, 
 
         $approvalList = array();
         foreach ($result as $r) {
-            $approvalList[] = new Approval($r['client_id'], $r['user_id'], $r['scope']);
+            $approvalList[] = new Approval($r['user_id'], $r['client_id'], $r['redirect_uri'], $r['response_type'], $r['scope']);
         }
 
         return $approvalList;
@@ -275,10 +281,12 @@ class PdoApprovalCodeTokenStorage implements AuthorizationCodeStorageInterface, 
 
         $query[] = sprintf(
             'CREATE TABLE IF NOT EXISTS %s (
-                client_id VARCHAR(255) NOT NULL,
                 user_id VARCHAR(255) NOT NULL,
+                client_id VARCHAR(255) NOT NULL,
+                redirect_uri VARCHAR(255) NOT NULL,
+                response_type VARCHAR(255) NOT NULL,
                 scope VARCHAR(255) NOT NULL,
-                UNIQUE (client_id, user_id, scope)
+                UNIQUE (user_id, client_id, redirect_uri, response_type, scope)
             )',
             $prefix.'approval'
         );
