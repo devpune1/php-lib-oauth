@@ -143,9 +143,7 @@ class OAuthServer
             $deleteApprovalRequest['response_type'],
             $deleteApprovalRequest['scope']
         );
-        $this->approvalStorage->deleteApproval($approval);
-
-        return new RedirectResponse($request->getUrl()->toString(), 302);
+        return $this->approvalStorage->deleteApproval($approval);
     }
 
     public function postToken(Request $request, UserInfoInterface $clientUserInfo = null)

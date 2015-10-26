@@ -6,4 +6,3 @@
 - in case of code clients a `redirect_uri` is not always needed, it could
   be preregistered. What to do?
 - same with scope...some code will badly break I guess?
-- strip query parameters from redirect after deleting approval

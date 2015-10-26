@@ -157,7 +157,7 @@ Instantiating the service is quite easy now:
     $serviceOptions = array(
         'disable_token_endpoint' => false,
         'disable_introspect_endpoint' => false,    
-        'oauth_route_prefix' => '',   // e.g.: '/_oauth'
+        'route_prefix' => '',   // e.g.: '/_oauth'
     );
  
     // here $approvalStorage, $authorizationCodeStorage and $accessTokenStorage

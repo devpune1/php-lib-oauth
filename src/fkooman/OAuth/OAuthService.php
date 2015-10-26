@@ -35,7 +35,7 @@ class OAuthService extends Service
     protected $options = array(
         'disable_token_endpoint' => false,
         'disable_introspect_endpoint' => false,
-        'oauth_route_prefix' => '',
+        'route_prefix' => '',
     );
 
     public function __construct(TemplateManagerInterface $templateManager, ClientStorageInterface $clientStorage, ResourceServerStorageInterface $resourceServerStorage, ApprovalStorageInterface $approvalStorage, AuthorizationCodeStorageInterface $authorizationCodeStorage, AccessTokenStorageInterface $accessTokenStorage, array $options = array(), IO $io = null)
@@ -59,7 +59,7 @@ class OAuthService extends Service
     private function registerRoutes()
     {
         $this->get(
-            $this->options['oauth_route_prefix'].'/authorize',
+            $this->options['route_prefix'].'/authorize',
             function (Request $request, UserInfoInterface $userInfo) {
                 $authorize = $this->server->getAuthorize($request, $userInfo);
                 if ($authorize instanceof Response) {
@@ -79,7 +79,7 @@ class OAuthService extends Service
         );
 
         $this->post(
-            $this->options['oauth_route_prefix'].'/authorize',
+            $this->options['route_prefix'].'/authorize',
             function (Request $request, UserInfoInterface $userInfo) {
                 return $this->server->postAuthorize($request, $userInfo);
             },
@@ -91,7 +91,7 @@ class OAuthService extends Service
         );
 
         $this->get(
-            $this->options['oauth_route_prefix'].'/approvals',
+            $this->options['route_prefix'].'/approvals',
             function (Request $request, UserInfoInterface $userInfo) {
                 $approvalList = $this->server->getApprovalList($userInfo);
 
@@ -108,9 +108,18 @@ class OAuthService extends Service
         );
 
         $this->delete(
-            $this->options['oauth_route_prefix'].'/approvals',
+            $this->options['route_prefix'].'/approvals',
             function (Request $request, UserInfoInterface $userInfo) {
-                return $this->server->deleteApproval($request, $userInfo);
+                $this->server->deleteApproval($request, $userInfo);
+
+                // as route_prefix starts with a '/' if set, it needs to
+                // be stripped to avoid double slashes.
+                $routePrefix = $this->options['route_prefix'];
+                if('' !== $routePrefix) {
+                    $routePrefix = substr($routePrefix, 1);
+                }
+
+                return new RedirectResponse($request->getUrl()->getRootUrl().$routePrefix.'approvals', 302);
             },
             array(
                 'fkooman\Rest\Plugin\Authentication\AuthenticationPlugin' => array(
@@ -121,7 +130,7 @@ class OAuthService extends Service
 
         if (!$this->options['disable_token_endpoint']) {
             $this->post(
-                $this->options['oauth_route_prefix'].'/token',
+                $this->options['route_prefix'].'/token',
                 function (Request $request, UserInfoInterface $userInfo = null) {
                     return $this->server->postToken($request, $userInfo);
                 },
@@ -136,7 +145,7 @@ class OAuthService extends Service
 
         if (!$this->options['disable_introspect_endpoint']) {
             $this->post(
-                $this->options['oauth_route_prefix'].'/introspect',
+                $this->options['route_prefix'].'/introspect',
                 function (Request $request, UserInfoInterface $userInfo) {
                     return $this->server->postIntrospect($request, $userInfo);
                 },
