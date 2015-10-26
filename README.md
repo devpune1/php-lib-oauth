@@ -159,10 +159,7 @@ Instantiating the service is quite easy now:
         'disable_introspect_endpoint' => false,    
         'route_prefix' => '',   // e.g.: '/_oauth'
     );
- 
-    // here $approvalStorage, $authorizationCodeStorage and $accessTokenStorage
-    // can just be $pdoApprovalCodeTokenStorage!
-   
+
     $service = new OAuthService(
         $clientStorage,
         $resourceServerStorage,
@@ -175,7 +172,7 @@ Instantiating the service is quite easy now:
     // register the authentication plugin with all its methods
     $service->getPluginRegistry()->registerDefaultPlugin($authenticationPlugin); 
 
-    // the protected resource!
+    // the protected resource
     $service->get(
         '/protected_resource',
         function(TokenInfo $tokenInfo) {
