@@ -39,9 +39,9 @@ available, like JSON, or the option to allow unregistered clients.
 
     $db = new PDO(...);
     
-    $authorizationCodeStorage = new AuthorizationCodeStorage($db);
-    $accessTokenStorage = new AccessTokenStorage($db);
-    $approvalStorage = new ApprovalStorage($db);
+    $approvalStorage = new PdoApprovalStorage($db);
+    $authorizationCodeStorage = new PdoAuthorizationCodeStorage($db);
+    $accessTokenStorage = new PdoAccessTokenStorage($db);
 
     $clientStorage = new JsonClientStorage('/path/to/clients.json');
     $resourceServerStorage = new JsonResourceServerStorage('/path/to/resource_servers.json');
