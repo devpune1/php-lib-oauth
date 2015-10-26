@@ -1,0 +1,125 @@
+<?php
+
+/**
+ *  Copyright 2015 François Kooman <fkooman@tuxed.net>.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+namespace fkooman\OAuth\Storage;
+
+use fkooman\OAuth\ApprovalStorageInterface;
+use fkooman\OAuth\Approval;
+use PDO;
+
+class PdoApprovalStorage extends PdoBaseStorage implements ApprovalStorageInterface
+{
+    public function __construct(PDO $db, $dbPrefix = '')
+    {
+        parent::__construct($db, $dbPrefix);
+    }
+
+    public function storeApproval(Approval $approval)
+    {
+        $stmt = $this->db->prepare(
+            sprintf(
+                'INSERT INTO %s (user_id, client_id, redirect_uri, response_type, scope) VALUES(:user_id, :client_id, :redirect_uri, :response_type, :scope)',
+                $this->dbPrefix.'approval'
+            )
+        );
+        $stmt->bindValue(':user_id', $approval->getUserId(), PDO::PARAM_STR);
+        $stmt->bindValue(':client_id', $approval->getClientId(), PDO::PARAM_STR);
+        $stmt->bindValue(':redirect_uri', $approval->getRedirectUri(), PDO::PARAM_STR);
+        $stmt->bindValue(':response_type', $approval->getResponseType(), PDO::PARAM_STR);
+        $stmt->bindValue(':scope', $approval->getScope(), PDO::PARAM_STR);
+        $stmt->execute();
+
+        return 1 === $stmt->rowCount();
+    }
+
+    public function isApproved(Approval $approval)
+    {
+        $stmt = $this->db->prepare(
+            sprintf(
+                'SELECT user_id, client_id, redirect_uri, response_type, scope FROM %s WHERE user_id = :user_id AND client_id = :client_id AND redirect_uri = :redirect_uri AND response_type = :response_type AND scope = :scope',
+                $this->dbPrefix.'approval'
+            )
+        );
+        $stmt->bindValue(':user_id', $approval->getUserId(), PDO::PARAM_STR);
+        $stmt->bindValue(':client_id', $approval->getClientId(), PDO::PARAM_STR);
+        $stmt->bindValue(':redirect_uri', $approval->getRedirectUri(), PDO::PARAM_STR);
+        $stmt->bindValue(':response_type', $approval->getResponseType(), PDO::PARAM_STR);
+        $stmt->bindValue(':scope', $approval->getScope(), PDO::PARAM_STR);
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        if (false === $result) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public function deleteApproval(Approval $approval)
+    {
+        $stmt = $this->db->prepare(
+            sprintf(
+                'DELETE FROM %s WHERE user_id = :user_id AND client_id = :client_id AND redirect_uri = :redirect_uri AND response_type = :response_type AND scope = :scope',
+                $this->dbPrefix.'approval'
+            )
+        );
+        $stmt->bindValue(':user_id', $approval->getUserId(), PDO::PARAM_STR);
+        $stmt->bindValue(':client_id', $approval->getClientId(), PDO::PARAM_STR);
+        $stmt->bindValue(':redirect_uri', $approval->getRedirectUri(), PDO::PARAM_STR);
+        $stmt->bindValue(':response_type', $approval->getResponseType(), PDO::PARAM_STR);
+        $stmt->bindValue(':scope', $approval->getScope(), PDO::PARAM_STR);
+        $stmt->execute();
+
+        return 1 === $stmt->rowCount();
+    }
+
+    public function getApprovalList($userId)
+    {
+        $stmt = $this->db->prepare(
+            sprintf(
+                'SELECT user_id, client_id, redirect_uri, response_type, scope FROM %s WHERE user_id = :user_id',
+                $this->dbPrefix.'approval'
+            )
+        );
+        $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
+        $stmt->execute();
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $approvalList = array();
+        foreach ($result as $r) {
+            $approvalList[] = new Approval($r['user_id'], $r['client_id'], $r['redirect_uri'], $r['response_type'], $r['scope']);
+        }
+
+        return $approvalList;
+    }
+
+    public function createTableQueries($dbPrefix)
+    {
+        return array(
+            sprintf(
+                'CREATE TABLE IF NOT EXISTS %s (
+                    user_id VARCHAR(255) NOT NULL,
+                    client_id VARCHAR(255) NOT NULL,
+                    redirect_uri VARCHAR(255) NOT NULL,
+                    response_type VARCHAR(255) NOT NULL,
+                    scope VARCHAR(255) NOT NULL,
+                    UNIQUE (user_id, client_id, redirect_uri, response_type, scope)
+                )',
+                $dbPrefix.'approval'
+            ),
+        );
+    }
+}
