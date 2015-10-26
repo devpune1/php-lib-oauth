@@ -21,19 +21,11 @@ use fkooman\OAuth\ResourceServerStorageInterface;
 use fkooman\OAuth\ResourceServer;
 use PDO;
 
-class PdoResourceServerStorage implements ResourceServerStorageInterface
+class PdoResourceServerStorage extends PdoBaseStorage implements ResourceServerStorageInterface
 {
-    /** @var \PDO */
-    private $db;
-
-    /** @var string */
-    private $prefix;
-
-    public function __construct(PDO $db, $prefix = '')
+    public function __construct(PDO $db, $dbPrefix = '')
     {
-        $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $this->db = $db;
-        $this->prefix = $prefix;
+        parent::__construct($db, $dbPrefix);
     }
 
     public function getResourceServer($resourceServerId)
@@ -41,7 +33,7 @@ class PdoResourceServerStorage implements ResourceServerStorageInterface
         $stmt = $this->db->prepare(
             sprintf(
                 'SELECT id, scope, secret FROM %s WHERE id = :id',
-                $this->prefix.'resource_server'
+                $this->dbPrefix.'resource_server'
             )
         );
 
@@ -59,38 +51,18 @@ class PdoResourceServerStorage implements ResourceServerStorageInterface
         );
     }
 
-    public static function createTableQueries($prefix)
+    public function createTableQueries($dbPrefix)
     {
-        $query = array();
-
-        $query[] = sprintf(
-            'CREATE TABLE IF NOT EXISTS %s (
-                id VARCHAR(255) NOT NULL,
-                scope VARCHAR(255) NOT NULL,
-                secret VARCHAR(255) NOT NULL,
-                PRIMARY KEY (id)
-            )',
-            $prefix.'resource_server'
+        return array(
+            sprintf(
+                'CREATE TABLE IF NOT EXISTS %s (
+                    id VARCHAR(255) NOT NULL,
+                    scope VARCHAR(255) NOT NULL,
+                    secret VARCHAR(255) NOT NULL,
+                    PRIMARY KEY (id)
+                )',
+                $dbPrefix.'resource_server'
+            ),
         );
-
-        return $query;
-    }
-
-    public function initDatabase()
-    {
-        $queries = self::createTableQueries($this->prefix);
-        foreach ($queries as $q) {
-            $this->db->query($q);
-        }
-        $tables = array('resource_server');
-        foreach ($tables as $t) {
-            // make sure the tables are empty
-            $this->db->query(
-                sprintf(
-                    'DELETE FROM %s',
-                    $this->prefix.$t
-                )
-            );
-        }
     }
 }
