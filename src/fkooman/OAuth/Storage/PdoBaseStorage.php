@@ -25,7 +25,7 @@ abstract class PdoBaseStorage
     protected $db;
 
     /** @var string */
-    protected $prefix;
+    protected $dbPrefix;
 
     public function __construct(PDO $db, $dbPrefix = '')
     {
