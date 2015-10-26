@@ -143,6 +143,7 @@ class OAuthServer
             $deleteApprovalRequest['response_type'],
             $deleteApprovalRequest['scope']
         );
+
         return $this->approvalStorage->deleteApproval($approval);
     }
 

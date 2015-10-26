@@ -116,11 +116,11 @@ class OAuthService extends Service
                 // as route_prefix starts with a '/' if set, it needs to
                 // be stripped to avoid double slashes.
                 $routePrefix = $this->options['route_prefix'];
-                if('' !== $routePrefix) {
+                if ('' !== $routePrefix) {
                     $routePrefix = substr($routePrefix, 1);
                 }
 
-                return new RedirectResponse($request->getUrl()->getRootUrl().$routePrefix.'approvals', 302);
+                return new RedirectResponse($request->getUrl()->getRootUrl().$routePrefix.'/approvals', 302);
             },
             array(
                 'fkooman\Rest\Plugin\Authentication\AuthenticationPlugin' => array(
