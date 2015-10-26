@@ -98,7 +98,10 @@ class OAuthService extends Service
 
                 return $this->templateManager->render(
                     'getApprovalList',
-                    array('approvalList' => $approvalList)
+                    array(
+                        'approval_list' => $approvalList,
+                        'user_id' => $userInfo->getUserId(),
+                    )
                 );
             },
             array(
