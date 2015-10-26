@@ -32,13 +32,16 @@ And two things that require (more or less) static storage:
 1. client data
 2. resource server data
 
-For the dynamic storage it makes most sense to use the included 
-`PdoApprovalCodeTokenStorage` class. For storing clients and resource servers
-there are also some options available, like JSON, or the option to allow 
-unregistered clients.
+For the dynamic storage it makes most sense to use the included classes
+ `AuthorizationCodeStorage`, `AccessTokenStorage`  and `ApprovalStorage`
+classes. For storing clients and resource servers there are also some options 
+available, like JSON, or the option to allow unregistered clients.
 
     $db = new PDO(...);
-    $pdoApprovalCodeTokenStorage = new PdoAppovalCodeTokenStorage($db);
+    
+    $authorizationCodeStorage = new AuthorizationCodeStorage($db);
+    $accessTokenStorage = new AccessTokenStorage($db);
+    $approvalStorage = new ApprovalStorage($db);
 
     $clientStorage = new JsonClientStorage('/path/to/clients.json');
     $resourceServerStorage = new JsonResourceServerStorage('/path/to/resource_servers.json');

@@ -5,7 +5,7 @@
   permissions to
 - rename `access_tokens`, `authorization_codes` and `authorization_codes_log` 
   tables to singular
-- rename `PdoCodeTokenStorage` to `PdoApprovalCodeTokenStorage` (API change)
+- remove `PdoCodeTokenStorage` and use three different classes (API change)
 - major API overhaul
 - much better documentation
 - big cleanup and simplification
