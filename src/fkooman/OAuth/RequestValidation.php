@@ -25,51 +25,33 @@ class RequestValidation
     public static function validateAuthorizeRequest(Request $request, $requireState = true)
     {
         // REQUIRED client_id
-        $clientId = $request->getUrl()->getQueryParameter('client_id');
-        if (is_null($clientId)) {
-            throw new BadRequestException('missing client_id');
-        }
-        if (false === InputValidation::clientId($clientId)) {
-            throw new BadRequestException('invalid client_id');
-        }
-
+        $clientId = self::validateParameter(
+            $request->getUrl()->getQueryParameter('client_id'),
+            'clientId'
+        );
         // REQUIRED response_type
-        $responseType = $request->getUrl()->getQueryParameter('response_type');
-        if (is_null($responseType)) {
-            throw new BadRequestException('missing response_type');
-        }
-        if (false === InputValidation::responseType($responseType)) {
-            throw new BadRequestException('invalid response_type');
-        }
-
+        $responseType = self::validateParameter(
+            $request->getUrl()->getQueryParameter('response_type'),
+            'responseType'
+        );
         // REQUIRED redirect_uri
-        $redirectUri = $request->getUrl()->getQueryParameter('redirect_uri');
-        if (is_null($redirectUri)) {
-            throw new BadRequestException('missing redirect_uri');
-        }
-        if (false === InputValidation::redirectUri($redirectUri)) {
-            throw new BadRequestException('invalid redirect_uri');
-        }
-
+        $redirectUri = self::validateParameter(
+            $request->getUrl()->getQueryParameter('redirect_uri'),
+            'redirectUri'
+        );
         // REQUIRED scope
-        $scope = $request->getUrl()->getQueryParameter('scope');
-        if (is_null($scope)) {
-            throw new BadRequestException('missing scope');
-        }
-        if (false === InputValidation::scope($scope)) {
-            throw new BadRequestException('invalid scope');
-        }
-
+        $scope = self::validateParameter(
+            $request->getUrl()->getQueryParameter('scope'),
+            'scope'
+        );
         // REQUIRED state (but allow override with flag)
-        $state = $request->getUrl()->getQueryParameter('state');
-        if (is_null($state) && !$requireState) {
-            $state = 'xxx_client_must_set_state_xxx';
-        }
+        $state = self::validateParameter(
+            $request->getUrl()->getQueryParameter('state'),
+            'state',
+            $requireState
+        );
         if (is_null($state)) {
-            throw new BadRequestException('missing state');
-        }
-        if (false === InputValidation::state($state)) {
-            throw new BadRequestException('invalid state');
+            $state = 'xxx_client_must_set_state_xxx';
         }
 
         return array(
@@ -85,13 +67,8 @@ class RequestValidation
     {
         $requestData = self::validateAuthorizeRequest($request, $requireState);
 
-        $approval = $request->getPostParameter('approval');
-        if (is_null($approval)) {
-            throw new BadRequestException('missing approval');
-        }
-        if (false === InputValidation::approval($approval)) {
-            throw new BadRequestException('invalid approval');
-        }
+        // REQUIRED approval
+        $approval = self::validateParameter($request->getPostParameter('approval'), 'approval');
 
         $requestData['approval'] = $approval;
 
@@ -101,40 +78,13 @@ class RequestValidation
     public static function validateTokenRequest(Request $request)
     {
         // REQUIRED grant_type
-        $grantType = $request->getPostParameter('grant_type');
-        if (is_null($grantType)) {
-            throw new BadRequestException('missing grant_type');
-        }
-        if (false === InputValidation::grantType($grantType)) {
-            throw new BadRequestException('invalid grant_type');
-        }
-
+        $grantType = self::validateParameter($request->getPostParameter('grant_type'), 'grantType');
         // REQUIRED client_id
-        $clientId = $request->getPostParameter('client_id');
-        if (is_null($clientId)) {
-            throw new BadRequestException('missing client_id');
-        }
-        if (false === InputValidation::clientId($clientId)) {
-            throw new BadRequestException('invalid client_id');
-        }
-
+        $clientId = self::validateParameter($request->getPostParameter('client_id'), 'clientId');
         // REQUIRED code
-        $code = $request->getPostParameter('code');
-        if (is_null($code)) {
-            throw new BadRequestException('missing code');
-        }
-        if (false === InputValidation::code($code)) {
-            throw new BadRequestException('invalid code');
-        }
-
+        $code = self::validateParameter($request->getPostParameter('code'), 'code');
         // REQUIRED redirect_uri
-        $redirectUri = $request->getPostParameter('redirect_uri');
-        if (is_null($redirectUri)) {
-            throw new BadRequestException('missing redirect_uri');
-        }
-        if (false === InputValidation::redirectUri($redirectUri)) {
-            throw new BadRequestException('invalid redirect_uri');
-        }
+        $redirectUri = self::validateParameter($request->getPostParameter('redirect_uri'), 'redirectUri');
 
         return array(
             'grant_type' => $grantType,
@@ -146,17 +96,28 @@ class RequestValidation
 
     public static function validateIntrospectRequest(Request $request)
     {
-        // token
-        $token = $request->getPostParameter('token');
-        if (is_null($token)) {
-            throw new BadRequestException('missing token');
-        }
-        if (false === InputValidation::token($token)) {
-            throw new BadRequestException('invalid token');
-        }
+        // REQUIRED token
+        $token = self::validateParameter($request->getPostParameter('token'), 'token');
 
         return array(
             'token' => $token,
         );
+    }
+
+    public static function validateParameter($parameterValue, $validatorMethod, $isRequired = true)
+    {
+        if (is_null($parameterValue)) {
+            if ($isRequired) {
+                throw new BadRequestException(sprintf('missing %s', $parameterName));
+            }
+
+            return;
+        }
+
+        if (false === InputValidation::$validatorMethod($parameterValue)) {
+            throw new BadRequestException(sprintf('invalid %s', $validatorMethod));
+        }
+
+        return $parameterValue;
     }
 }
