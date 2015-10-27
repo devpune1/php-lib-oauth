@@ -1,6 +1,6 @@
 # Release History
 
-## 3.0.0 (...)
+## 3.0.0 (2015-10-27)
 - add support for Approvals to remember applications the user has granted 
   permissions to
 - rename `access_tokens`, `authorization_codes` and `authorization_codes_log` 
