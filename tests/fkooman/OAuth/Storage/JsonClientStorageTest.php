@@ -24,7 +24,7 @@ class JsonClientStorageTest extends PHPUnit_Framework_TestCase
     public function testGet()
     {
         $clientStorage = new JsonClientStorage(__DIR__.'/data/clients.json');
-        $client = $clientStorage->getClient('my_client', 'code');
+        $client = $clientStorage->getClient('my_client', 'code', 'https://example.org/cb', 'read');
         $this->assertSame('my_client', $client->getClientId());
         $this->assertSame('$2y$10$cG3iFTTpitGAHYyci8bII.68.uRwvmSpCTvEfVmDwka5E2132XmAC', $client->getSecret());
         $this->assertSame('read', $client->getScope());
@@ -35,7 +35,7 @@ class JsonClientStorageTest extends PHPUnit_Framework_TestCase
     public function testGetNonExisting()
     {
         $clientStorage = new JsonClientStorage(__DIR__.'/data/clients.json');
-        $this->assertFalse($clientStorage->getClient('non_existing', 'code'));
+        $this->assertFalse($clientStorage->getClient('non_existing', 'code', 'https://example.org/cb', 'read'));
     }
 
     /**
@@ -45,6 +45,6 @@ class JsonClientStorageTest extends PHPUnit_Framework_TestCase
     public function testMissingFile()
     {
         $clientStorage = new JsonClientStorage(__DIR__.'/data/missing.json');
-        $clientStorage->getClient('foo', 'code');
+        $clientStorage->getClient('foo', 'code', 'https://example.org/cb', 'read');
     }
 }

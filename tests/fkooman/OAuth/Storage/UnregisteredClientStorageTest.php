@@ -30,10 +30,4 @@ class UnregisteredClientStorageTest extends PHPUnit_Framework_TestCase
         $this->assertSame('https://example.org/cb', $client->getRedirectUri());
         $this->assertSame('foo bar', $client->getScope());
     }
-
-    public function testMissingRedirectUriClient()
-    {
-        $clientStorage = new UnregisteredClientStorage();
-        $this->assertFalse($clientStorage->getClient('id', 'code', null, 'foo bar'));
-    }
 }
