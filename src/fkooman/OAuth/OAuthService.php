@@ -101,6 +101,7 @@ class OAuthService extends Service
                     array(
                         'approval_list' => $approvalList,
                         'user_id' => $userInfo->getUserId(),
+                        'request_url' => $request->getUrl()->toString()
                     )
                 );
             },
