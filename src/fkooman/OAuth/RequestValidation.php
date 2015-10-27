@@ -81,9 +81,9 @@ class RequestValidation
         );
     }
 
-    public static function validatePostAuthorizeRequest(Request $request)
+    public static function validatePostAuthorizeRequest(Request $request, $requireState = true)
     {
-        $requestData = self::validateAuthorizeRequest($request);
+        $requestData = self::validateAuthorizeRequest($request, $requireState);
 
         $approval = $request->getPostParameter('approval');
         if (is_null($approval)) {
