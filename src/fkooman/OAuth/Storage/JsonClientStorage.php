@@ -31,7 +31,7 @@ class JsonClientStorage implements ClientStorageInterface
         $this->jsonFile = $jsonFile;
     }
 
-    public function getClient($clientId, $responseType, $redirectUri, $scope)
+    public function getClient($clientId, $responseType = null, $redirectUri = null, $scope = null)
     {
         $data = Json::decodeFile($this->jsonFile);
         if (!array_key_exists($clientId, $data)) {

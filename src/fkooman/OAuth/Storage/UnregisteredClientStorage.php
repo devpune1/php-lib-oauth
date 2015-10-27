@@ -22,9 +22,8 @@ use fkooman\OAuth\Client;
 
 class UnregisteredClientStorage implements ClientStorageInterface
 {
-    public function getClient($clientId, $responseType, $redirectUri, $scope)
+    public function getClient($clientId, $responseType = null, $redirectUri = null, $scope = null)
     {
-        // all parameters are required anyway...
         return new Client($clientId, $responseType, $redirectUri, $scope, null);
     }
 }

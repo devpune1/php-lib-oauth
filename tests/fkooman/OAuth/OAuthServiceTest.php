@@ -145,9 +145,9 @@ class OAuthServiceTest extends PHPUnit_Framework_TestCase
                 'Content-Type: application/json',
                 'Cache-Control: no-store',
                 'Pragma: no-cache',
-                'Content-Length: 145',
+                'Content-Length: 167',
                 '',
-                '{"access_token":"eyJjbGllbnRfaWQiOiJ0ZXN0LWNsaWVudCIsInVzZXJfaWQiOiJhZG1pbiIsImlzc3VlZF9hdCI6MTIzNDU2Nzg5MCwic2NvcGUiOiJwb3N0In0","scope":"post"}',
+                '{"access_token":"eyJjbGllbnRfaWQiOiJ0ZXN0LWNsaWVudCIsInVzZXJfaWQiOiJhZG1pbiIsImlzc3VlZF9hdCI6MTIzNDU2Nzg5MCwic2NvcGUiOiJwb3N0In0","scope":"post","token_type":"bearer"}',
             ),
             $this->oauthService->run($request)->toArray()
         );

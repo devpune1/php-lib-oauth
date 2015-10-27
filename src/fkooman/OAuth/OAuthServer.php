@@ -161,7 +161,9 @@ class OAuthServer
 
         $tokenRequest = RequestValidation::validateTokenRequest($request);
 
-        $client = $this->clientStorage->getClient($tokenRequest['client_id']);
+        $client = $this->clientStorage->getClient(
+            $tokenRequest['client_id']
+        );
         if (null === $clientUserInfo) {
             // unauthenticated client
             if (null !== $client->getSecret()) {
@@ -205,12 +207,6 @@ class OAuthServer
             }
         }
 
-        if (null !== $authorizationCode->getScope()) {
-            if ($authorizationCode->getScope() !== $tokenRequest['scope']) {
-                throw new BadRequestException('scope does not match expected value');
-            }
-        }
-
         // FIXME: grant_type must also match I think, but we do not have any
         // mapping logic from response_type to grant_type yet...
 
@@ -231,6 +227,8 @@ class OAuthServer
             array(
                 'access_token' => $accessToken,
                 'scope' => $authorizationCode->getScope(),
+                'token_type' => 'bearer',
+                //'expires_in' => 3600,
             )
         );
 

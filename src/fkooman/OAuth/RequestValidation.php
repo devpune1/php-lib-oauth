@@ -173,15 +173,6 @@ class RequestValidation
             throw new BadRequestException('invalid code');
         }
 
-        // REQUIRED scope
-        $scope = $request->getPostParameter('scope');
-        if (is_null($scope)) {
-            throw new BadRequestException('missing scope');
-        }
-        if (false === InputValidation::scope($scope)) {
-            throw new BadRequestException('invalid scope');
-        }
-
         // REQUIRED redirect_uri
         $redirectUri = $request->getPostParameter('redirect_uri');
         if (is_null($redirectUri)) {
@@ -194,7 +185,6 @@ class RequestValidation
         return array(
             'grant_type' => $grantType,
             'client_id' => $clientId,
-            'scope' => $scope,
             'code' => $code,
             'redirect_uri' => $redirectUri,
         );
