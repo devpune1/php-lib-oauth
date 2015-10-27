@@ -50,19 +50,6 @@ class PdoApprovalStorageTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($this->storage->storeApproval($approval));
     }
 
-    // this test throws an exception, should not store the same approval
-    // twice!
-#    public function testStoreApprovalApproval()
-#    {
-#        $approval = new Approval(
-#            'foo',
-#            'bar',
-#            'foo bar'
-#        );
-#        $this->assertTrue($this->storage->storeApproval($approval));
-#        $this->assertFalse($this->storage->storeApproval($approval));
-#    }
-
     public function testIsApproved()
     {
         $approval = new Approval(
@@ -86,19 +73,5 @@ class PdoApprovalStorageTest extends PHPUnit_Framework_TestCase
             'foo bar'
         );
         $this->assertFalse($this->storage->isApproved($approval));
-    }
-
-    public function testDeleteApproved()
-    {
-        $approval = new Approval(
-            'user',
-            'test-client',
-            'https://example.org/cb',
-            'code',
-            'foo bar'
-        );
-        $this->assertTrue($this->storage->storeApproval($approval));
-        $this->assertTrue($this->storage->deleteApproval($approval));
-        $this->assertFalse($this->storage->deleteApproval($approval));
     }
 }

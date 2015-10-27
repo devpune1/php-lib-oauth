@@ -20,7 +20,6 @@ namespace fkooman\OAuth;
 use fkooman\Rest\Service;
 use fkooman\Http\Request;
 use fkooman\Http\Response;
-use fkooman\Http\RedirectResponse;
 use fkooman\Rest\Plugin\Authentication\UserInfoInterface;
 use fkooman\IO\IO;
 use fkooman\Tpl\TemplateManagerInterface;
@@ -84,48 +83,6 @@ class OAuthService extends Service
             $this->options['route_prefix'].'/authorize',
             function (Request $request, UserInfoInterface $userInfo) {
                 return $this->server->postAuthorize($request, $userInfo);
-            },
-            array(
-                'fkooman\Rest\Plugin\Authentication\AuthenticationPlugin' => array(
-                    'activate' => array('user'),
-                ),
-            )
-        );
-
-        $this->get(
-            $this->options['route_prefix'].'/approvals',
-            function (Request $request, UserInfoInterface $userInfo) {
-                $approvalList = $this->server->getApprovalList($userInfo);
-
-                return $this->templateManager->render(
-                    'getApprovalList',
-                    array(
-                        'approval_list' => $approvalList,
-                        'user_id' => $userInfo->getUserId(),
-                        'request_url' => $request->getUrl()->toString(),
-                    )
-                );
-            },
-            array(
-                'fkooman\Rest\Plugin\Authentication\AuthenticationPlugin' => array(
-                    'activate' => array('user'),
-                ),
-            )
-        );
-
-        $this->delete(
-            $this->options['route_prefix'].'/approvals',
-            function (Request $request, UserInfoInterface $userInfo) {
-                $this->server->deleteApproval($request, $userInfo);
-
-                // as route_prefix starts with a '/' if set, it needs to
-                // be stripped to avoid double slashes.
-                $routePrefix = $this->options['route_prefix'];
-                if ('' !== $routePrefix) {
-                    $routePrefix = substr($routePrefix, 1);
-                }
-
-                return new RedirectResponse($request->getUrl()->getRootUrl().$routePrefix.'/approvals', 302);
             },
             array(
                 'fkooman\Rest\Plugin\Authentication\AuthenticationPlugin' => array(

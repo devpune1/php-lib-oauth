@@ -22,8 +22,4 @@ interface ApprovalStorageInterface
     public function storeApproval(Approval $approval);
 
     public function isApproved(Approval $approval);
-
-    public function deleteApproval(Approval $approval);
-
-    public function getApprovalList($userId);
 }

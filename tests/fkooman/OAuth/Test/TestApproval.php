@@ -31,22 +31,4 @@ class TestApproval implements ApprovalStorageInterface
     {
         return false;
     }
-
-    public function deleteApproval(Approval $approval)
-    {
-        return true;
-    }
-
-    public function getApprovalList($userId)
-    {
-        return array(
-            new Approval(
-                'user',
-                'test-client',
-                'https://example.org/cb',
-                'code',
-                'foo bar'
-            ),
-        );
-    }
 }
