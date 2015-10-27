@@ -4,6 +4,9 @@
 # Introduction
 Create an OAuth 2.0 Authorization Server (AS). 
 
+See [INTEROPERABILITY.md](INTEROPERABILITY.md) for more information on behavior
+expected from the client.
+
 # How to Use
 To use this library you need to do some things:
 
