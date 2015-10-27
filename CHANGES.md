@@ -10,6 +10,8 @@
 - much better documentation
 - big cleanup and simplification
 - additional unit test coverage
+- be more strict in required parameters, but allow for override to disable
+  required `state`
 
 ## 2.0.0 (2015-10-15)
 - implement `token` response_type (RFC 6749#4.2)

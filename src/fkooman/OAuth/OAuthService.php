@@ -29,9 +29,6 @@ class OAuthService extends Service
 {
     protected $templateManager;
 
-    /** @var OAuthServer */
-    protected $server;
-
     /** @var array */
     protected $options = array(
         'disable_token_endpoint' => false,
@@ -39,11 +36,15 @@ class OAuthService extends Service
         'route_prefix' => '',
     );
 
+    /** @var OAuthServer */
+    protected $server;
+
     public function __construct(TemplateManagerInterface $templateManager, ClientStorageInterface $clientStorage, ResourceServerStorageInterface $resourceServerStorage, ApprovalStorageInterface $approvalStorage, AuthorizationCodeStorageInterface $authorizationCodeStorage, AccessTokenStorageInterface $accessTokenStorage, array $options = array(), IO $io = null)
     {
         parent::__construct();
 
         $this->templateManager = $templateManager;
+        $this->options = array_merge($this->options, $options);
 
         $this->server = new OAuthServer(
             $clientStorage,
@@ -51,9 +52,9 @@ class OAuthService extends Service
             $approvalStorage,
             $authorizationCodeStorage,
             $accessTokenStorage,
+            $this->options,
             $io
         );
-        $this->options = array_merge($this->options, $options);
         $this->registerRoutes();
     }
 
@@ -101,7 +102,7 @@ class OAuthService extends Service
                     array(
                         'approval_list' => $approvalList,
                         'user_id' => $userInfo->getUserId(),
-                        'request_url' => $request->getUrl()->toString()
+                        'request_url' => $request->getUrl()->toString(),
                     )
                 );
             },

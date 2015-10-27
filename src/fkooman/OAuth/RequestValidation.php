@@ -22,7 +22,7 @@ use fkooman\Http\Exception\BadRequestException;
 
 class RequestValidation
 {
-    public static function validateAuthorizeRequest(Request $request)
+    public static function validateAuthorizeRequest(Request $request, $requireState = true)
     {
         // REQUIRED client_id
         $clientId = $request->getUrl()->getQueryParameter('client_id');
@@ -42,27 +42,34 @@ class RequestValidation
             throw new BadRequestException('invalid response_type');
         }
 
-        // OPTIONAL redirect_uri
-        // XXX: it seems this is required by this code?
+        // REQUIRED redirect_uri
         $redirectUri = $request->getUrl()->getQueryParameter('redirect_uri');
+        if (is_null($redirectUri)) {
+            throw new BadRequestException('missing redirect_uri');
+        }
         if (false === InputValidation::redirectUri($redirectUri)) {
             throw new BadRequestException('invalid redirect_uri');
         }
 
-        // OPTIONAL scope
+        // REQUIRED scope
         $scope = $request->getUrl()->getQueryParameter('scope');
-        if (null !== $scope) {
-            if (false === InputValidation::scope($scope)) {
-                throw new BadRequestException('invalid scope');
-            }
+        if (is_null($scope)) {
+            throw new BadRequestException('missing scope');
+        }
+        if (false === InputValidation::scope($scope)) {
+            throw new BadRequestException('invalid scope');
         }
 
-        // RECOMMENDED, but treat as OPTIONAL state
+        // REQUIRED state (but allow override with flag)
         $state = $request->getUrl()->getQueryParameter('state');
-        if (null !== $state) {
-            if (false === InputValidation::state($state)) {
-                throw new BadRequestException('invalid state');
-            }
+        if (is_null($state) && !$requireState) {
+            $state = 'xxx_client_must_set_state_xxx';
+        }
+        if (is_null($state)) {
+            throw new BadRequestException('missing state');
+        }
+        if (false === InputValidation::state($state)) {
+            throw new BadRequestException('invalid state');
         }
 
         return array(
@@ -111,19 +118,22 @@ class RequestValidation
             throw new BadRequestException('invalid response_type');
         }
 
-        // OPTIONAL redirect_uri
-        // XXX: it seems this is required by this code?
+        // REQUIRED redirect_uri
         $redirectUri = $request->getUrl()->getQueryParameter('redirect_uri');
+        if (is_null($redirectUri)) {
+            throw new BadRequestException('missing redirect_uri');
+        }
         if (false === InputValidation::redirectUri($redirectUri)) {
             throw new BadRequestException('invalid redirect_uri');
         }
 
-        // OPTIONAL scope
+        // REQUIRED scope
         $scope = $request->getUrl()->getQueryParameter('scope');
-        if (null !== $scope) {
-            if (false === InputValidation::scope($scope)) {
-                throw new BadRequestException('invalid scope');
-            }
+        if (is_null($scope)) {
+            throw new BadRequestException('missing scope');
+        }
+        if (false === InputValidation::scope($scope)) {
+            throw new BadRequestException('invalid scope');
         }
 
         return array(
@@ -163,14 +173,20 @@ class RequestValidation
             throw new BadRequestException('invalid code');
         }
 
-        // REQUIRED|OPTIONAL scope
+        // REQUIRED scope
         $scope = $request->getPostParameter('scope');
+        if (is_null($scope)) {
+            throw new BadRequestException('missing scope');
+        }
         if (false === InputValidation::scope($scope)) {
             throw new BadRequestException('invalid scope');
         }
 
-        // REQUIRED|OPTIONAL redirect_uri
+        // REQUIRED redirect_uri
         $redirectUri = $request->getPostParameter('redirect_uri');
+        if (is_null($redirectUri)) {
+            throw new BadRequestException('missing redirect_uri');
+        }
         if (false === InputValidation::redirectUri($redirectUri)) {
             throw new BadRequestException('invalid redirect_uri');
         }
@@ -188,6 +204,9 @@ class RequestValidation
     {
         // token
         $token = $request->getPostParameter('token');
+        if (is_null($token)) {
+            throw new BadRequestException('missing token');
+        }
         if (false === InputValidation::token($token)) {
             throw new BadRequestException('invalid token');
         }
