@@ -1,6 +1,6 @@
 # Release History
 
-## 3.0.1 (2015-11-03)
+## 4.0.0 (2015-11-03)
 - remove `UnregisteredClientStorage` class, dangerous in the wrong hands
 - remove `redirect_uri` from `Approval` class, no need to have that
  
