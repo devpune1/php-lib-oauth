@@ -1,5 +1,8 @@
 # Release History
 
+## 3.0.1 (...)
+- remove `UnregisteredClientStorage` class, dangerous in the wrong hands
+ 
 ## 3.0.0 (2015-10-27)
 - add support for Approvals to remember applications the user has granted 
   permissions to
