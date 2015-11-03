@@ -85,15 +85,12 @@ class OAuthServer
         $approval = new Approval(
             $userInfo->getUserId(),
             $client->getClientId(),
-            $authorizeRequest['redirect_uri'],
             $authorizeRequest['response_type'],
-            $client->getScope()     // XXX what if requested scope is different from client scope?
+            $authorizeRequest['scope']
         );
 
         if ($this->approvalStorage->isApproved($approval)) {
             // already approved
-            // XXX we need to store the response_type as well for the 
-            // approval! and also redirect_uri!
             return $this->handleApproval($authorizeRequest, $userInfo);
         }
 
@@ -101,8 +98,9 @@ class OAuthServer
         return array(
             'user_id' => $userInfo->getUserId(),
             'client_id' => $client->getClientId(),
-            'redirect_uri' => $client->getRedirectUri(),
-            'scope' => $client->getScope(),
+            'redirect_uri' => $authorizeRequest['redirect_uri'],
+#            'response_type' => $authorizeRequest['response_type'],
+            'scope' => $authorizeRequest['scope'],
             'request_url' => $request->getUrl()->toString(),
         );
     }
@@ -281,7 +279,6 @@ class OAuthServer
         $approval = new Approval(
             $userInfo->getUserId(),
             $postAuthorizeRequest['client_id'],
-            $postAuthorizeRequest['redirect_uri'],
             $postAuthorizeRequest['response_type'],
             $postAuthorizeRequest['scope']
         );

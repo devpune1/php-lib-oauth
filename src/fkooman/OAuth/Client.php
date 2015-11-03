@@ -99,7 +99,7 @@ class Client
 
     public function setSecret($secret)
     {
-        #        // XXX validate secret as well
+#        // XXX: validate secret as well
 #        if(false === InputValidation::secret($secret)) {
 #            throw new InvalidArgumentException('invalid secret');
 #        }

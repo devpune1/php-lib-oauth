@@ -32,13 +32,12 @@ class PdoApprovalStorage extends PdoBaseStorage implements ApprovalStorageInterf
     {
         $stmt = $this->db->prepare(
             sprintf(
-                'INSERT INTO %s (user_id, client_id, redirect_uri, response_type, scope) VALUES(:user_id, :client_id, :redirect_uri, :response_type, :scope)',
+                'INSERT INTO %s (user_id, client_id, response_type, scope) VALUES(:user_id, :client_id, :response_type, :scope)',
                 $this->dbPrefix.'approval'
             )
         );
         $stmt->bindValue(':user_id', $approval->getUserId(), PDO::PARAM_STR);
         $stmt->bindValue(':client_id', $approval->getClientId(), PDO::PARAM_STR);
-        $stmt->bindValue(':redirect_uri', $approval->getRedirectUri(), PDO::PARAM_STR);
         $stmt->bindValue(':response_type', $approval->getResponseType(), PDO::PARAM_STR);
         $stmt->bindValue(':scope', $approval->getScope(), PDO::PARAM_STR);
         $stmt->execute();
@@ -50,13 +49,12 @@ class PdoApprovalStorage extends PdoBaseStorage implements ApprovalStorageInterf
     {
         $stmt = $this->db->prepare(
             sprintf(
-                'SELECT user_id, client_id, redirect_uri, response_type, scope FROM %s WHERE user_id = :user_id AND client_id = :client_id AND redirect_uri = :redirect_uri AND response_type = :response_type AND scope = :scope',
+                'SELECT user_id, client_id, response_type, scope FROM %s WHERE user_id = :user_id AND client_id = :client_id AND response_type = :response_type AND scope = :scope',
                 $this->dbPrefix.'approval'
             )
         );
         $stmt->bindValue(':user_id', $approval->getUserId(), PDO::PARAM_STR);
         $stmt->bindValue(':client_id', $approval->getClientId(), PDO::PARAM_STR);
-        $stmt->bindValue(':redirect_uri', $approval->getRedirectUri(), PDO::PARAM_STR);
         $stmt->bindValue(':response_type', $approval->getResponseType(), PDO::PARAM_STR);
         $stmt->bindValue(':scope', $approval->getScope(), PDO::PARAM_STR);
         $stmt->execute();
@@ -75,10 +73,9 @@ class PdoApprovalStorage extends PdoBaseStorage implements ApprovalStorageInterf
                 'CREATE TABLE IF NOT EXISTS %s (
                     user_id VARCHAR(255) NOT NULL,
                     client_id VARCHAR(255) NOT NULL,
-                    redirect_uri VARCHAR(255) NOT NULL,
                     response_type VARCHAR(255) NOT NULL,
                     scope VARCHAR(255) NOT NULL,
-                    UNIQUE (user_id, client_id, redirect_uri, response_type, scope)
+                    UNIQUE (user_id, client_id, response_type, scope)
                 )',
                 $dbPrefix.'approval'
             ),

@@ -2,6 +2,7 @@
 
 ## 3.0.1 (...)
 - remove `UnregisteredClientStorage` class, dangerous in the wrong hands
+- remove `redirect_uri` from `Approval` class, no need to have that
  
 ## 3.0.0 (2015-10-27)
 - add support for Approvals to remember applications the user has granted 

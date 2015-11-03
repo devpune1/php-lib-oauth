@@ -26,19 +26,15 @@ class Approval
     private $clientId;
 
     /** @var string */
-    private $redirectUri;
-
-    /** @var string */
     private $responseType;
 
     /** @var string */
     private $scope;
 
-    public function __construct($userId, $clientId, $redirectUri, $responseType, $scope)
+    public function __construct($userId, $clientId, $responseType, $scope)
     {
         $this->userId = $userId;
         $this->clientId = $clientId;
-        $this->redirectUri = $redirectUri;
         $this->responseType = $responseType;
         $this->scope = $scope;
     }
@@ -51,11 +47,6 @@ class Approval
     public function getClientId()
     {
         return $this->clientId;
-    }
-
-    public function getRedirectUri()
-    {
-        return $this->redirectUri;
     }
 
     public function getResponseType()
