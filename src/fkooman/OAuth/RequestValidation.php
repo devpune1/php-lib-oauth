@@ -108,7 +108,7 @@ class RequestValidation
     {
         if (is_null($parameterValue)) {
             if ($isRequired) {
-                throw new BadRequestException(sprintf('missing %s', $parameterName));
+                throw new BadRequestException(sprintf('missing %s', $validatorMethod));
             }
 
             return;
