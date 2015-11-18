@@ -91,7 +91,7 @@ class OAuthServer
 
         if ($this->approvalStorage->isApproved($approval)) {
             // already approved
-            return $this->handleApproval($authorizeRequest, $userInfo);
+            return $this->handleApproval($client, $authorizeRequest, $userInfo);
         }
 
         // if not, show the approval dialog
@@ -124,7 +124,7 @@ class OAuthServer
         $this->validateAuthorizeRequestWithClient($client, $postAuthorizeRequest);
 
         if ('yes' === $postAuthorizeRequest['approval']) {
-            return $this->handleApproval($postAuthorizeRequest, $userInfo);
+            return $this->handleApproval($client, $postAuthorizeRequest, $userInfo);
         }
 
         return $this->handleDenial($postAuthorizeRequest, $userInfo);
@@ -273,12 +273,12 @@ class OAuthServer
         }
     }
 
-    private function handleApproval(array $postAuthorizeRequest, UserInfoInterface $userInfo)
+    private function handleApproval(Client $client, array $postAuthorizeRequest, UserInfoInterface $userInfo)
     {
         // store the approval if not yet approved
         $approval = new Approval(
             $userInfo->getUserId(),
-            $postAuthorizeRequest['client_id'],
+            $client->getClientId(),
             $postAuthorizeRequest['response_type'],
             $postAuthorizeRequest['scope']
         );
@@ -289,9 +289,9 @@ class OAuthServer
 
         switch ($postAuthorizeRequest['response_type']) {
             case 'code':
-                return $this->handleCodeApproval($postAuthorizeRequest, $userInfo);
+                return $this->handleCodeApproval($client, $postAuthorizeRequest, $userInfo);
             case 'token':
-                return $this->handleTokenApproval($postAuthorizeRequest, $userInfo);
+                return $this->handleTokenApproval($client, $postAuthorizeRequest, $userInfo);
             default:
                 throw new BadRequestException('invalid response_type');
         }
@@ -309,12 +309,12 @@ class OAuthServer
         }
     }
 
-    private function handleCodeApproval(array $postAuthorizeRequest, UserInfoInterface $userInfo)
+    private function handleCodeApproval(Client $client, array $postAuthorizeRequest, UserInfoInterface $userInfo)
     {
         // generate authorization code and redirect back to client
         $code = $this->authorizationCodeStorage->storeAuthorizationCode(
             new AuthorizationCode(
-                $postAuthorizeRequest['client_id'],
+                $client->getClientId(),
                 $userInfo->getUserId(),
                 $this->io->getTime(),
                 $postAuthorizeRequest['redirect_uri'],
@@ -355,12 +355,12 @@ class OAuthServer
         );
     }
 
-    private function handleTokenApproval(array $postAuthorizeRequest, UserInfoInterface $userInfo)
+    private function handleTokenApproval(Client $client, array $postAuthorizeRequest, UserInfoInterface $userInfo)
     {
         // generate access token and redirect back to client
         $accessToken = $this->accessTokenStorage->storeAccessToken(
             new AccessToken(
-                $postAuthorizeRequest['client_id'],
+                $client->getClientId(),
                 $userInfo->getUserId(),
                 $this->io->getTime(),
                 $postAuthorizeRequest['scope']
