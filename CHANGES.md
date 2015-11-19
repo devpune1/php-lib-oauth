@@ -1,5 +1,8 @@
 # Release History
 
+## 5.0.0 (2015-11-19)
+- update authentication dependencies
+
 ## 4.0.1 (2015-11-18)
 - use `client_id` from `Client` object instead of from request URI as the 
   `client_id` can be rewritten in unregistered client situation, for example

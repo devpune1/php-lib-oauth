@@ -22,12 +22,12 @@
         "fkooman/io": "^1.0.0",
         "fkooman/json": "^1.0.0",
         "fkooman/rest": "^1.0.0",
-        "fkooman/rest-plugin-authentication": "dev-develop",
+        "fkooman/rest-plugin-authentication": "^2.0.0",
         "fkooman/tpl": "^2.0.0",
         "php": ">= 5.4"
     },
     "require-dev": {
         "fkooman/base64": "^1.0.0",
-        "fkooman/rest-plugin-authentication-basic": "dev-develop"
+        "fkooman/rest-plugin-authentication-basic": "^2.0.0"
     }
 }
