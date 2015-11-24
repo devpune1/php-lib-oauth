@@ -67,10 +67,17 @@ class OAuthService extends Service
                     return $authorize;
                 }
                 // XXX here authorize must be array type!
-                return $this->templateManager->render(
-                    'getAuthorize',
-                    $authorize
+                $response = new Response();
+                $response->setHeader('X-Frame-Options', 'DENY');
+                $response->setHeader('Content-Security-Policy', "default-src 'self'");
+                $response->setBody(
+                    $this->templateManager->render(
+                        'getAuthorize',
+                        $authorize
+                    )
                 );
+
+                return $response;
             },
             array(
                 'fkooman\Rest\Plugin\Authentication\AuthenticationPlugin' => array(

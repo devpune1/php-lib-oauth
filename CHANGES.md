@@ -1,5 +1,9 @@
 # Release History
 
+## 5.0.1 (2015-11-24)
+- add `X-Frame-Options` and `Content-Security-Policy` response headers to 
+  authorize dialog
+
 ## 5.0.0 (2015-11-19)
 - update authentication dependencies
 

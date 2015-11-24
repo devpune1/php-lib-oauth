@@ -85,6 +85,8 @@ class OAuthServiceTest extends PHPUnit_Framework_TestCase
             array(
                 'HTTP/1.1 200 OK',
                 'Content-Type: text/html;charset=UTF-8',
+                'X-Frame-Options: DENY',
+                "Content-Security-Policy: default-src 'self'",
                 'Content-Length: 275',
                 '',
                 '{"getAuthorize":{"user_id":"admin","client_id":"test-client","redirect_uri":"https:\/\/localhost\/cb","scope":"post","request_url":"https:\/\/oauth.example\/authorize?client_id=test-client&response_type=code&redirect_uri=https%3A%2F%2Flocalhost%2Fcb&state=12345&scope=post"}}',
