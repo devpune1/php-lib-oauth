@@ -51,7 +51,7 @@ class RequestValidation
             $requireState
         );
         if (is_null($state)) {
-            $state = 'xxx_client_must_set_state_xxx';
+            $state = 'xxx_client_should_set_state_xxx';
         }
 
         return array(
