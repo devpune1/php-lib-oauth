@@ -1,6 +1,6 @@
 # Release History
 
-## 5.0.3 (2016-03-25)
+## 6.0.0 (...)
 - no longer use `fkooman/io` for random data, it was not secure
 
 ## 5.0.2 (2016-03-25)
