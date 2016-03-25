@@ -1,5 +1,8 @@
 # Release History
 
+## 5.0.3 (2016-03-25)
+- update `fkooman/io` which no longer uses openssl for random data
+
 ## 5.0.2 (2016-03-25)
 - update `fkooman/json`
 - fix API incompatibility with TestTemplateManager
