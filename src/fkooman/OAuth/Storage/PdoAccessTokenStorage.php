@@ -21,26 +21,25 @@ namespace fkooman\OAuth\Storage;
 use fkooman\IO\IO;
 use fkooman\OAuth\AccessTokenStorageInterface;
 use fkooman\OAuth\AccessToken;
-use fkooman\OAuth\Random;
 use PDO;
 
 class PdoAccessTokenStorage extends PdoBaseStorage implements AccessTokenStorageInterface
 {
-    /** @var \fkooman\OAuth\Random */
-    private $random;
+    /** @var \fkooman\IO\IO */
+    private $io;
 
-    public function __construct(PDO $db, $dbPrefix = '', Random $random = null)
+    public function __construct(PDO $db, $dbPrefix = '', IO $io = null)
     {
         parent::__construct($db, $dbPrefix);
-        if (null === $random) {
-            $random = new Random();
+        if (null === $io) {
+            $io = new IO();
         }
-        $this->random = $random;
+        $this->io = $io;
     }
 
     public function storeAccessToken(AccessToken $accessToken)
     {
-        $generatedToken = $this->random->getRandom();
+        $generatedToken = $this->io->getRandom();
 
         $stmt = $this->db->prepare(
             sprintf(

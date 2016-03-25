@@ -50,8 +50,8 @@ class OAuthServiceTest extends PHPUnit_Framework_TestCase
             )
         ));
 
-        $dateTime = $this->getMockBuilder('DateTime')->getMock();
-        $dateTime->expects($this->any())->method('getTimeStamp')->will($this->returnValue(1234567890));
+        $io = $this->getMockBuilder('fkooman\IO\IO')->getMock();
+        $io->expects($this->any())->method('getTime')->will($this->returnValue(1234567890));
 
         $authenticationPlugin = new AuthenticationPlugin();
         $authenticationPlugin->register($this->getBasicAuth('user'), 'user');
@@ -66,7 +66,7 @@ class OAuthServiceTest extends PHPUnit_Framework_TestCase
             new TestAuthorizationCode(),
             new TestAccessToken(),
             array(),
-            $dateTime
+            $io
         );
         $this->oauthService->getPluginRegistry()->registerDefaultPlugin($authenticationPlugin);
     }

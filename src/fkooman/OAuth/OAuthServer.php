@@ -23,7 +23,7 @@ use fkooman\Http\Request;
 use fkooman\Http\RedirectResponse;
 use fkooman\Http\JsonResponse;
 use fkooman\Http\Exception\BadRequestException;
-use DateTime;
+use fkooman\IO\IO;
 use fkooman\Http\Exception\UnauthorizedException;
 
 class OAuthServer
@@ -48,22 +48,21 @@ class OAuthServer
         'require_state' => true,
     );
 
-    /** @var \DateTime */
-    private $dateTime;
+    /** @var \fkooman\IO\IO */
+    private $io;
 
-    public function __construct(ClientStorageInterface $clientStorage, ResourceServerStorageInterface $resourceServerStorage, ApprovalStorageInterface $approvalStorage, AuthorizationCodeStorageInterface $authorizationCodeStorage, AccessTokenStorageInterface $accessTokenStorage, array $options = array(), DateTime $dateTime = null)
+    public function __construct(ClientStorageInterface $clientStorage, ResourceServerStorageInterface $resourceServerStorage, ApprovalStorageInterface $approvalStorage, AuthorizationCodeStorageInterface $authorizationCodeStorage, AccessTokenStorageInterface $accessTokenStorage, array $options = array(), IO $io = null)
     {
         $this->clientStorage = $clientStorage;
         $this->resourceServerStorage = $resourceServerStorage;
         $this->approvalStorage = $approvalStorage;
         $this->authorizationCodeStorage = $authorizationCodeStorage;
         $this->accessTokenStorage = $accessTokenStorage;
-        $this->options = array_merge($this->options, $options);
-
-        if (null === $dateTime) {
-            $dateTime = new DateTime();
+        if (null === $io) {
+            $io = new IO();
         }
-        $this->dateTime = $dateTime;
+        $this->options = array_merge($this->options, $options);
+        $this->io = $io;
     }
 
     public function getAuthorize(Request $request, UserInfoInterface $userInfo)
@@ -173,7 +172,7 @@ class OAuthServer
         $authorizationCode = $this->authorizationCodeStorage->retrieveAuthorizationCode($tokenRequest['code']);
 
         $issuedAt = $authorizationCode->getIssuedAt();
-        if ($this->dateTime->getTimeStamp() > $issuedAt + 600) {
+        if ($this->io->getTime() > $issuedAt + 600) {
             throw new BadRequestException('authorization code expired');
         }
 
@@ -195,7 +194,7 @@ class OAuthServer
             new AccessToken(
                 $authorizationCode->getClientId(),
                 $authorizationCode->getUserId(),
-                $this->dateTime->getTimeStamp(),
+                $this->io->getTime(),
                 $authorizationCode->getScope()
             )
         );
@@ -318,7 +317,7 @@ class OAuthServer
             new AuthorizationCode(
                 $client->getClientId(),
                 $userInfo->getUserId(),
-                $this->dateTime->getTimeStamp(),
+                $this->io->getTime(),
                 $postAuthorizeRequest['redirect_uri'],
                 $postAuthorizeRequest['scope']
             )
@@ -364,7 +363,7 @@ class OAuthServer
             new AccessToken(
                 $client->getClientId(),
                 $userInfo->getUserId(),
-                $this->dateTime->getTimeStamp(),
+                $this->io->getTime(),
                 $postAuthorizeRequest['scope']
             )
         );

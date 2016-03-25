@@ -29,8 +29,8 @@ class PdoAuthorizationCodeStorageTest extends PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $random = $this->getMockBuilder('fkooman\OAuth\Random')->getMock();
-        $random->expects($this->any())->method('getRandom')->will($this->returnValue('112233ff'));
+        $io = $this->getMockBuilder('fkooman\IO\IO')->getMock();
+        $io->expects($this->any())->method('getRandom')->will($this->returnValue('112233ff'));
 
         $this->storage = new PdoAuthorizationCodeStorage(
             new PDO(
@@ -39,7 +39,7 @@ class PdoAuthorizationCodeStorageTest extends PHPUnit_Framework_TestCase
                 $GLOBALS['DB_PASSWD']
             ),
             '',
-            $random
+            $io
         );
         $this->storage->initDatabase();
     }
