@@ -15,6 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 namespace fkooman\OAuth\Test;
 
 use fkooman\Tpl\TemplateManagerInterface;
@@ -22,6 +23,10 @@ use fkooman\Json\Json;
 
 class TestTemplateManager implements TemplateManagerInterface
 {
+    public function addDefault(array $templateVariables)
+    {
+    }
+
     public function setDefault(array $templateVariables)
     {
     }

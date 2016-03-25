@@ -1,5 +1,10 @@
 # Release History
 
+## 5.0.2 (2016-03-25)
+- update `fkooman/json`
+- fix API incompatibility with TestTemplateManager
+- source formatting
+
 ## 5.0.1 (2015-11-24)
 - add `X-Frame-Options` and `Content-Security-Policy` response headers to 
   authorize dialog

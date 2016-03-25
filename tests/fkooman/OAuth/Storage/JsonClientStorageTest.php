@@ -15,6 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 namespace fkooman\OAuth\Storage;
 
 use PHPUnit_Framework_TestCase;
@@ -40,7 +41,7 @@ class JsonClientStorageTest extends PHPUnit_Framework_TestCase
 
     /**
      * @expectedException RuntimeException
-     * @expectedExceptionMessage unable to read file
+     * @expectedExceptionMessage error reading file
      */
     public function testMissingFile()
     {
