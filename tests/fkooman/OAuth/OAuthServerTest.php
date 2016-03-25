@@ -62,8 +62,8 @@ class OAuthServerTest extends PHPUnit_Framework_TestCase
             )
         ));
 
-        $io = $this->getMockBuilder('fkooman\IO\IO')->getMock();
-        $io->expects($this->any())->method('getTime')->will($this->returnValue(1234567890));
+        $dateTime = $this->getMockBuilder('DateTime')->getMock();
+        $dateTime->expects($this->any())->method('getTimeStamp')->will($this->returnValue(1234567890));
 
         $this->oauthServer = new OAuthServer(
             new TestClient(),
@@ -72,7 +72,7 @@ class OAuthServerTest extends PHPUnit_Framework_TestCase
             $testAuthorizationCode,
             $testAccessToken,
             array(),
-            $io
+            $dateTime
         );
     }
 

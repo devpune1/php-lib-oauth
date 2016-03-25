@@ -22,8 +22,8 @@ use fkooman\Rest\Service;
 use fkooman\Http\Request;
 use fkooman\Http\Response;
 use fkooman\Rest\Plugin\Authentication\UserInfoInterface;
-use fkooman\IO\IO;
 use fkooman\Tpl\TemplateManagerInterface;
+use DateTime;
 
 class OAuthService extends Service
 {
@@ -39,7 +39,7 @@ class OAuthService extends Service
     /** @var OAuthServer */
     protected $server;
 
-    public function __construct(TemplateManagerInterface $templateManager, ClientStorageInterface $clientStorage, ResourceServerStorageInterface $resourceServerStorage, ApprovalStorageInterface $approvalStorage, AuthorizationCodeStorageInterface $authorizationCodeStorage, AccessTokenStorageInterface $accessTokenStorage, array $options = array(), IO $io = null)
+    public function __construct(TemplateManagerInterface $templateManager, ClientStorageInterface $clientStorage, ResourceServerStorageInterface $resourceServerStorage, ApprovalStorageInterface $approvalStorage, AuthorizationCodeStorageInterface $authorizationCodeStorage, AccessTokenStorageInterface $accessTokenStorage, array $options = array(), DateTime $dateTime = null)
     {
         parent::__construct();
 
@@ -53,7 +53,7 @@ class OAuthService extends Service
             $authorizationCodeStorage,
             $accessTokenStorage,
             $this->options,
-            $io
+            $dateTime
         );
         $this->registerRoutes();
     }

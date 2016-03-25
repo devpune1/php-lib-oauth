@@ -18,28 +18,27 @@
 
 namespace fkooman\OAuth\Storage;
 
-use fkooman\IO\IO;
+use fkooman\OAuth\Random;
 use fkooman\OAuth\AuthorizationCodeStorageInterface;
 use fkooman\OAuth\AuthorizationCode;
 use PDO;
 
 class PdoAuthorizationCodeStorage extends PdoBaseStorage implements AuthorizationCodeStorageInterface
 {
-    /** @var \fkooman\IO\IO */
-    private $io;
-
-    public function __construct(PDO $db, $dbPrefix = '', IO $io = null)
+    /** @var \fkooman\OAuth\Random */
+    private $random;
+    public function __construct(PDO $db, $dbPrefix = '', Random $random = null)
     {
         parent::__construct($db, $dbPrefix);
-        if (null === $io) {
-            $io = new IO();
+        if (null === $random) {
+            $random = new Random();
         }
-        $this->io = $io;
+        $this->random = $random;
     }
 
     public function storeAuthorizationCode(AuthorizationCode $authorizationCode)
     {
-        $generatedCode = $this->io->getRandom();
+        $generatedCode = $this->random->getRandom();
 
         $stmt = $this->db->prepare(
             sprintf(

@@ -1,5 +1,8 @@
 # Release History
 
+## 5.0.3 (2016-03-25)
+- no longer use `fkooman/io` for random date, not secure
+
 ## 5.0.2 (2016-03-25)
 - update `fkooman/json`
 - fix API incompatibility with TestTemplateManager
