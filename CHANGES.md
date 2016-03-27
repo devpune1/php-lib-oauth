@@ -6,6 +6,8 @@
   next major release
 - add `NoResourceServerStorage` when there are no registered resource 
   servers
+- add `UnauthenticatedClientAuthentication` to support unauthenticated
+  "authorization code grant" clients using the token endpoint
 
 ## 5.0.3 (2016-03-25)
 - update `fkooman/io` which no longer uses openssl for random data
