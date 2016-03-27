@@ -4,6 +4,8 @@
 - add `NullApprovalStorage` if you never want to store approvals
 - add `OAuthModule` now next to `OAuthService` which is being deleted in 
   next major release
+- add `NoResourceServerStorage` when there are no registered resource 
+  servers
 
 ## 5.0.3 (2016-03-25)
 - update `fkooman/io` which no longer uses openssl for random data
