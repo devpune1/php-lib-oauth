@@ -1,5 +1,8 @@
 # Release History
 
+## 5.1.0 (...)
+- add `NullApprovalStorage` if you never want to store approvals
+
 ## 5.0.3 (2016-03-25)
 - update `fkooman/io` which no longer uses openssl for random data
 
