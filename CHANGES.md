@@ -1,6 +1,6 @@
 # Release History
 
-## 5.1.0 (...)
+## 5.1.0 (2016-03-30)
 - add `NullApprovalStorage` if you never want to store approvals
 - add `OAuthModule` now next to `OAuthService` which is being deleted in 
   next major release
