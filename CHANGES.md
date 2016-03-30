@@ -8,6 +8,8 @@
   servers
 - add `UnauthenticatedClientAuthentication` to support unauthenticated
   "authorization code grant" clients using the token endpoint
+- add `NullAuthorizationCodeStorage` when using only implicit grant
+  profile, no need to store authorization codes
 
 ## 5.0.3 (2016-03-25)
 - update `fkooman/io` which no longer uses openssl for random data
