@@ -1,5 +1,9 @@
 # Release History
 
+## 5.1.1 (...)
+- if an access token already exists for a particular client_id, user_id
+  and scope, return that instead of generating a new one
+
 ## 5.1.0 (2016-03-30)
 - add `NullApprovalStorage` if you never want to store approvals
 - add `OAuthModule` now next to `OAuthService` which is being deleted in 
