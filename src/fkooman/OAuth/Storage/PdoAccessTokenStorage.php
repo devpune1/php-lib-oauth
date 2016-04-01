@@ -39,25 +39,6 @@ class PdoAccessTokenStorage extends PdoBaseStorage implements AccessTokenStorage
 
     public function storeAccessToken(AccessToken $accessToken)
     {
-        // check if an access token is already available and return that 
-        // instead of generating a new one
-        $stmt = $this->db->prepare(
-            sprintf(
-                'SELECT token FROM %s WHERE client_id = :client_id AND user_id = :user_id AND scope = :scope',
-                $this->dbPrefix.'access_token'
-            )
-        );
-        $stmt->bindValue(':client_id', $accessToken->getClientId(), PDO::PARAM_STR);
-        $stmt->bindValue(':user_id', $accessToken->getUserId(), PDO::PARAM_STR);
-        $stmt->bindValue(':scope', $accessToken->getScope(), PDO::PARAM_STR);
-        $stmt->execute();
-        $stmt->execute();
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
-        if (false !== $result) {
-            return $result['token'];
-        }
-
-        // generate a new token, none exists yet
         $generatedToken = $this->io->getRandom();
 
         $stmt = $this->db->prepare(
