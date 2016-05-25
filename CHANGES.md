@@ -1,5 +1,8 @@
 # Release History
 
+## 5.1.1 (2016-05-25)
+- update `fkooman/io` dependency to new major version
+
 ## 5.1.0 (2016-03-30)
 - add `NullApprovalStorage` if you never want to store approvals
 - add `OAuthModule` now next to `OAuthService` which is being deleted in 
