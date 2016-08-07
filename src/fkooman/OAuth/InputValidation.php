@@ -70,9 +70,7 @@ class InputValidation
         #   fragment component.
 
         // MUST be valid absolute URL
-        // NOTE: this check is more strict than RFC 3986!
-        // NOTE: we also require a PATH here
-        if (false === filter_var($redirectUri, FILTER_VALIDATE_URL, FILTER_FLAG_PATH_REQUIRED)) {
+        if (false === filter_var($redirectUri, FILTER_VALIDATE_URL)) {
             return false;
         }
 

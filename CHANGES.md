@@ -1,5 +1,9 @@
 # Release History
 
+## 5.1.2 (2016-08-07)
+- do no longer require the path to be part of the `redirect_uri` as that is 
+  not required by the specification
+
 ## 5.1.1 (2016-05-25)
 - update `fkooman/io` dependency to new major version
 
