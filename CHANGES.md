@@ -1,5 +1,8 @@
 # Release History
 
+## 5.2.0 (2016-08-10)
+- add `ArrayClientStorage`
+
 ## 5.1.2 (2016-08-07)
 - do no longer require the path to be part of the `redirect_uri` as that is 
   not required by the specification
