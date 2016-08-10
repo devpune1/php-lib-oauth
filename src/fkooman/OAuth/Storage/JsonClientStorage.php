@@ -39,12 +39,15 @@ class JsonClientStorage implements ClientStorageInterface
             return false;
         }
 
+        // secret is not always needed
+        $clientSecret = array_key_exists('secret', $data[$clientId]) ? $data[$clientId]['secret'] : null;
+
         return new Client(
             $clientId,
             $data[$clientId]['response_type'],
             $data[$clientId]['redirect_uri'],
             $data[$clientId]['scope'],
-            $data[$clientId]['secret']
+            $clientSecret
         );
     }
 }

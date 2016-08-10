@@ -37,12 +37,15 @@ class ArrayClientStorage implements ClientStorageInterface
             return false;
         }
 
+        // secret is not always needed
+        $clientSecret = array_key_exists('secret', $this->clientConfig[$clientId]) ? $this->clientConfig[$clientId]['secret'] : null;
+
         return new Client(
             $clientId,
             $this->clientConfig[$clientId]['response_type'],
             $this->clientConfig[$clientId]['redirect_uri'],
             $this->clientConfig[$clientId]['scope'],
-            $this->clientConfig[$clientId]['secret']
+            $clientSecret
         );
     }
 }

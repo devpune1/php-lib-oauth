@@ -1,5 +1,9 @@
 # Release History
 
+## 5.2.1 (2016-08-10)
+- do not require `secret` to be specified in the client config, assume
+  `null` when not specified
+
 ## 5.2.0 (2016-08-10)
 - add `ArrayClientStorage`
 
