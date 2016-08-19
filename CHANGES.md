@@ -1,5 +1,8 @@
 # Release History
 
+## 6.0.0 (2016-08-16)
+- update `fkooman/rest` and `fkooman/http` dependencies
+
 ## 5.2.1 (2016-08-10)
 - do not require `secret` to be specified in the client config, assume
   `null` when not specified
